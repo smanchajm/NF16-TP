@@ -4,6 +4,15 @@
 
 int main()
 {
+
+    /*char nom1[] = "non", nom2[] = "nom";
+    char *pnom1 = nom1, * pnom2 = nom2;
+
+    printf("%d",ordreAlpha(pnom1, pnom2));*/
+
+
+
+
     T_Magasin *mon_magasin = NULL;
 
     // ============= MENU UTILISATEUR ============= */

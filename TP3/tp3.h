@@ -29,6 +29,9 @@ T_Produit *creerProduit(char *designation, float prix, int quantite);
 T_Rayon *creerRayon(char *nom);
 T_Magasin *creerMagasin(char *nom);
 
+// fonction de permettant de comparer deux mots aphabétiquement
+int ordreAlpha(char *nom1, char *nom2);
+
 // Ajout d'un rayon dans un magasin
 int ajouterRayon(T_Magasin *magasin, char *nomRayon);
 

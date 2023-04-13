@@ -61,13 +61,46 @@ T_Magasin *creerMagasin(char *nom) {
     return nouveauMagasin;
 }
 
+// fonction de permettant de comparer deux mots aphabétiquement
+int ordreAlpha(char *nom1, char *nom2){
+    // retourne 1 si le premier nom est avant le deuxième nom
+    if(nom1[1] < nom2[1]){
+        return 1;
+    } else if (nom1[1] > nom2[1]){
+        return 2;
+    }
+    // si les deux mots sont égaux on retourne 0
+    else if(*nom1 == *nom2){
+        return 0;
+    }
+    // si les deux premiers caractères sont égaux, nous comparons les mots en enlevant le premier caractère
+    return ordreAlpha(nom1+1, nom2+1);
+}
 
 
 /* ********************************
  * Ajout d'un rayon dans un magasin
  ******************************** */
 int ajouterRayon(T_Magasin *magasin, char *nomRayon) {
-    // TODO
+    // Création d'un rayon
+    T_Rayon *nouveauRayon = creerRayon(nomRayon);
+    T_Rayon *rayonSelec = magasin->liste_rayons;
+    T_Rayon *rayonSelecSuivant = magasin->liste_rayons->suivant;
+    // Permet de trouver la place du nouveau rayon dans l'ordre alphabétique -> strcmp
+    while ((strcmp(rayonSelec->nom_rayon, nouveauRayon->nom_rayon) < 0) && (strcmp(nouveauRayon->nom_rayon, rayonSelecSuivant->nom_rayon) < 0)){
+        rayonSelec = rayonSelecSuivant;
+        rayonSelecSuivant = rayonSelecSuivant->suivant;
+        // si le rayon existe déjà alors on retourne 0
+        if(strcmp(nouveauRayon->nom_rayon, rayonSelec->nom_rayon) == 0) return 0;
+    }
+    // si le non du rayon est ajouté en queue de chaîne
+    if(rayonSelecSuivant == NULL){
+        nouveauRayon->suivant = NULL;
+        rayonSelec->suivant = nouveauRayon;
+    } else{
+        nouveauRayon->suivant = rayonSelecSuivant;
+        rayonSelec->suivant = nouveauRayon;
+    }
     return 1;
 }
 
@@ -78,6 +111,7 @@ int ajouterRayon(T_Magasin *magasin, char *nomRayon) {
  ******************************** */
 int ajouterProduit(T_Rayon *rayon,char *designation, float prix, int quantite) {
     // TODO
+
     return 1;
 }
 

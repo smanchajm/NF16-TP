@@ -61,22 +61,6 @@ T_Magasin *creerMagasin(char *nom) {
     return nouveauMagasin;
 }
 
-// fonction de permettant de comparer deux mots aphabétiquement
-int ordreAlpha(char *nom1, char *nom2){
-    // retourne 1 si le premier nom est avant le deuxième nom
-    if(nom1[1] < nom2[1]){
-        return 1;
-    } else if (nom1[1] > nom2[1]){
-        return 2;
-    }
-    // si les deux mots sont égaux on retourne 0
-    else if(*nom1 == *nom2){
-        return 0;
-    }
-    // si les deux premiers caractères sont égaux, nous comparons les mots en enlevant le premier caractère
-    return ordreAlpha(nom1+1, nom2+1);
-}
-
 
 /* ********************************
  * Ajout d'un rayon dans un magasin
@@ -88,13 +72,17 @@ int ajouterRayon(T_Magasin *magasin, char *nomRayon) {
     T_Rayon *rayonSelecSuivant = magasin->liste_rayons->suivant;
 
     // Retourne 0 si le nom est nul
-    if(strlen(nomRayon)==0) return 0;
+    if(strlen(nomRayon)==0){
+        printf("Impossible.\nLes Informations sont erronées .\nVeuillez recommencer.");
+        return 0;
+    }
 
     // Insertion du nouveau rayon en tête de liste
     if((magasin->liste_rayons == NULL) || (strcmp(nomRayon, rayonSelec->nom_rayon) < 0)){
         T_Rayon *nouveauRayon = creerRayon(nomRayon);
         magasin ->liste_rayons = nouveauRayon;
         nouveauRayon->suivant = rayonSelec;
+        printf("Insertion du rayon en tête de liste.\n");
         return 1;
     }
 
@@ -102,7 +90,10 @@ int ajouterRayon(T_Magasin *magasin, char *nomRayon) {
     // Permet de trouver la place du nouveau rayon dans l'ordre alphabétique -> strcmp
     while ((strcmp(rayonSelec->nom_rayon, nomRayon) < 0) && (strcmp(nomRayon, rayonSelecSuivant->nom_rayon) < 0)) {
         // si le rayon existe déjà alors on retourne 0
-        if (strcmp(nomRayon, rayonSelec->nom_rayon) == 0) return 0;
+        if (strcmp(nomRayon, rayonSelec->nom_rayon) == 0){
+            printf("Impossible.\nLe rayon existe déjà.\n");
+            return 0;
+        }
         rayonSelec = rayonSelecSuivant;
         rayonSelecSuivant = rayonSelecSuivant->suivant;
     }
@@ -117,6 +108,7 @@ int ajouterRayon(T_Magasin *magasin, char *nomRayon) {
         nouveauRayon->suivant = rayonSelecSuivant;
         rayonSelec->suivant = nouveauRayon;
     }
+    printf("Le rayon est ajouté avec succès !\n");
     return 1;
 }
 
@@ -159,6 +151,7 @@ int ajouterProduit(T_Rayon *rayon, char *designation, float prix, int quantite) 
     // Attention bien relier dans le bon ordre à VERIFIER
     nouveauProduit->suivant = produitSelec->suivant;
     produitSelec->suivant = nouveauProduit;
+    printf("Le produit est ajouté avec succès !\n");
 
     return 1;
 }

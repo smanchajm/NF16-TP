@@ -82,22 +82,38 @@ int ordreAlpha(char *nom1, char *nom2){
  * Ajout d'un rayon dans un magasin
  ******************************** */
 int ajouterRayon(T_Magasin *magasin, char *nomRayon) {
-    // Création d'un rayon
-    T_Rayon *nouveauRayon = creerRayon(nomRayon);
+
+    // Sélection des deux premiers rayons -> Cela va nous permettre de parcourir la liste chaînée
     T_Rayon *rayonSelec = magasin->liste_rayons;
     T_Rayon *rayonSelecSuivant = magasin->liste_rayons->suivant;
+
+    // Retourne 0 si le nom est nul
+    if(strlen(nomRayon)==0) return 0;
+
+    // Insertion du nouveau rayon en tête de liste
+    if((magasin->liste_rayons == NULL) || (strcmp(nomRayon, rayonSelec->nom_rayon) < 0)){
+        T_Rayon *nouveauRayon = creerRayon(nomRayon);
+        magasin ->liste_rayons = nouveauRayon;
+        nouveauRayon->suivant = rayonSelec;
+        return 1;
+    }
+
+    // Voir comment gérer le dernier rayon
     // Permet de trouver la place du nouveau rayon dans l'ordre alphabétique -> strcmp
-    while ((strcmp(rayonSelec->nom_rayon, nouveauRayon->nom_rayon) < 0) && (strcmp(nouveauRayon->nom_rayon, rayonSelecSuivant->nom_rayon) < 0)){
+    while ((strcmp(rayonSelec->nom_rayon, nomRayon) < 0) && (strcmp(nomRayon, rayonSelecSuivant->nom_rayon) < 0)) {
+        // si le rayon existe déjà alors on retourne 0
+        if (strcmp(nomRayon, rayonSelec->nom_rayon) == 0) return 0;
         rayonSelec = rayonSelecSuivant;
         rayonSelecSuivant = rayonSelecSuivant->suivant;
-        // si le rayon existe déjà alors on retourne 0
-        if(strcmp(nouveauRayon->nom_rayon, rayonSelec->nom_rayon) == 0) return 0;
     }
+
+    // Création d'un rayon
+    T_Rayon *nouveauRayon = creerRayon(nomRayon);
     // si le non du rayon est ajouté en queue de chaîne
-    if(rayonSelecSuivant == NULL){
+    if (rayonSelecSuivant == NULL) {
         nouveauRayon->suivant = NULL;
         rayonSelec->suivant = nouveauRayon;
-    } else{
+    } else {
         nouveauRayon->suivant = rayonSelecSuivant;
         rayonSelec->suivant = nouveauRayon;
     }
@@ -105,12 +121,44 @@ int ajouterRayon(T_Magasin *magasin, char *nomRayon) {
 }
 
 
-
 /* ********************************
  * Ajout d'un produit dans un rayon
  ******************************** */
-int ajouterProduit(T_Rayon *rayon,char *designation, float prix, int quantite) {
-    // TODO
+int ajouterProduit(T_Rayon *rayon, char *designation, float prix, int quantite) {
+    T_Produit *produitSelec = rayon->liste_produits;
+
+    // Retourne 0 si les informations sont impossibles
+    if((strlen(designation)==0) || (prix <= 0) || (quantite <= 0)){
+        printf("Attention les informations renseignées sont incorrectes.\nVeuillez recommencer.\n");
+        return 0;
+    }
+    // Vérifier que le rayon existe !!
+
+    // Insertion du produit en tête de liste
+    if((rayon->liste_produits == NULL) || (prix < rayon->liste_produits->prix)){
+        printf("Insertion du produit en tête de liste.\n");
+        T_Produit *nouveauProduit = creerProduit(designation, prix, quantite);
+        rayon->liste_produits = nouveauProduit;
+        nouveauProduit->suivant = produitSelec;
+        return 1;
+    }
+
+    // Emplacement du produit par prix
+    while((produitSelec != NULL) && (prix >= produitSelec->suivant->prix)){
+        // Vérification que le produit n'existe pas dans ce rayon
+        if(strcmp(designation, produitSelec)== 0){
+            printf("Impossible le produit existe déjà");
+            return 0;
+        }
+        produitSelec = produitSelec->suivant;
+    }
+
+    // Après avoir trouvé l'emplacement création du produit
+    T_Produit *nouveauProduit = creerProduit(designation, prix, quantite);
+
+    // Attention bien relier dans le bon ordre à VERIFIER
+    nouveauProduit->suivant = produitSelec->suivant;
+    produitSelec->suivant = nouveauProduit;
 
     return 1;
 }

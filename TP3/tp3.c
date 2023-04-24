@@ -167,11 +167,63 @@ void afficherMagasin(T_Magasin *magasin) {
 
 
 
+// Fonction purement estethiques permettant de créer un tableau
+void espaces(int nb){
+    for(int i = 0 ; i<nb; i++)
+        printf(" ");
+    printf("|");
+}
+
+void sep(int nb){
+    for(int i = 0; i<nb; i++){
+        printf("-");
+    }
+    printf("\n");
+}
+
+
+
 /* *****************************************
  * Affichage de tous les produits d'un rayon
  ***************************************** */
 void afficherRayon(T_Rayon *rayon) {
-    // TODO
+    if(rayon->liste_produits != NULL){
+        // Affichage de la ligne d'en-tête
+        int longmax = 15;
+        printf("Designation");
+        espaces(longmax-11);
+        printf("Prix");
+        espaces(15-4);
+        printf("Quantité en stock");
+        espaces(1);
+        printf("\n");
+        sep(longmax + 37);
+
+        T_Produit *produiSelec = rayon->liste_produits;
+        char prix[20];
+        char quantité[20];
+        while (produiSelec != NULL){
+
+            // ATTENTION Voir les erreurs de BUFFER
+
+            printf("%s", produiSelec->designation);
+            espaces(longmax - strlen(produiSelec->designation) + longmax-11);
+
+            // Affichage et conversion des int en chaînes de caractères
+            itoa(produiSelec->prix, prix, 10);
+            printf("%s euros", produiSelec->prix);
+            espaces(15 - (strlen(prix)+6) );
+
+            itoa(produiSelec->quantite_en_stock, quantité, 10);
+            printf("%s", produiSelec->quantite_en_stock);
+            espaces(17 - strlen(quantité));
+
+            printf("\n");
+        }
+        sep(longmax+37);
+    } else{
+        printf("Attention, le rayon : %s, ne contient aucuns produits\n", rayon->nom_rayon);
+    }
 }
 
 

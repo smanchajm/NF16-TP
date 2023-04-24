@@ -4,6 +4,16 @@
 
 int main()
 {
+    /*char nommg[] = "oi";
+    char *ptnom = &nommg;
+    T_Magasin *magasin1 = creerMagasin(ptnom);
+
+    char nomr[] = "fruit";
+    char *ptnomr = &nomr;
+    ajouterRayon(magasin1, nomr);*/
+
+
+
 
     // ============= MENU UTILISATEUR ============= */
     char choix = '0';
@@ -25,9 +35,19 @@ int main()
 
         switch (choix) {
             case '1' :
+                printf("Quelle est le nom du magasin ?");
+                char *nom;
+                scanf("%s", nom);
+                T_Magasin *magasin1 = creerMagasin(nom);
+
                 break;
 
             case '2' :
+                printf("Nom : ");
+                char * nom_new = malloc(50 * sizeof(char));
+                scanf("%s", nom_new);
+                ajouterRayon(magasin1, nom_new);
+
                 break;
 
             case '3' :

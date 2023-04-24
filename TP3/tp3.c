@@ -201,7 +201,7 @@ void afficherRayon(T_Rayon *rayon) {
 
         T_Produit *produiSelec = rayon->liste_produits;
         char prix[20];
-        char quantité[20];
+        char quantite[20];
         while (produiSelec != NULL){
 
             // ATTENTION Voir les erreurs de BUFFER
@@ -214,9 +214,9 @@ void afficherRayon(T_Rayon *rayon) {
             printf("%s euros", produiSelec->prix);
             espaces(15 - (strlen(prix)+6) );
 
-            itoa(produiSelec->quantite_en_stock, quantité, 10);
+            itoa(produiSelec->quantite_en_stock, quantite, 10);
             printf("%s", produiSelec->quantite_en_stock);
-            espaces(17 - strlen(quantité));
+            espaces(17 - strlen(quantite));
 
             printf("\n");
         }
@@ -242,7 +242,45 @@ int supprimerProduit(T_Rayon *rayon, char* designation_produit) {
  * Suppression d'un rayon et de tous les produits qu'il contient
  ************************************************************* */
 int supprimerRayon(T_Magasin *magasin, char *nom_rayon) {
-    // TODO
+    T_Rayon *rayonPrec, *rayonSelec = magasin->liste_rayons;
+
+    // Recherche du rayon à supprimer dans le magasin
+    // Si le rayon ne se trouve pas en tête de liste
+    if(magasin->liste_rayons->nom_rayon != nom_rayon) {
+        while (((rayonSelec != NULL) && (rayonSelec->suivant->nom_rayon != nom_rayon))) {
+            rayonSelec = rayonSelec->suivant;
+        }
+        // Permet de garder le rayon précédent pour reformer la chaîne
+        rayonPrec = rayonSelec;
+        rayonSelec = rayonSelec->suivant;
+    } else rayonSelec = magasin->liste_rayons;
+
+    // Que si le rayon existe (!= NULL)
+    if(rayonSelec){
+        T_Produit *tmp, *produitSelec = rayonSelec->liste_produits;
+        // Suppression de tous les produits d'un rayon (tmp permet de garder le lien vers le produit suivant)
+        while (produitSelec != NULL){
+            tmp = produitSelec;
+            produitSelec = produitSelec->suivant;
+            free(tmp);
+        }
+        // Si le rayon est en tête de chaîne
+        if(rayonSelec == magasin->liste_rayons){
+            magasin->liste_rayons = rayonSelec->suivant;
+            free(rayonSelec);
+            return 1;
+        }
+
+        // Autrement suppression du rayon et reformation du chaînage
+        rayonPrec->suivant = rayonSelec->suivant;
+        free(rayonSelec);
+    } else{
+        printf("Impossible le rayon n'existe pas.\n");
+        return 0;
+    }
+
+
+
     return 1;
 }
 

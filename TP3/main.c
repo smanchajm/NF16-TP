@@ -1,22 +1,53 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <winsock.h>
 #include "tp3.h"
 
 int main()
 {
-    /*char nommg[] = "oi";
-    char *ptnom = &nommg;
-    T_Magasin *magasin1 = creerMagasin(ptnom);
-
-    char nomr[] = "fruit";
-    char *ptnomr = &nomr;
-    ajouterRayon(magasin1, nomr);*/
 
 
+    char *nomMagasin = (char*) malloc((MAX*sizeof(char)));
+    printf("Quel est le nom du magasin ?");
+    scanf("%s", nomMagasin);
+    T_Magasin *magasin = creerMagasin(nomMagasin);
+
+    char *nomRayon = (char*) malloc(MAX*sizeof(char));
+    printf("Quel est le nom du rayon ?");
+    scanf("%s", nomRayon);
+    ajouterRayon(magasin, nomRayon);
+
+    float prix = 0;
+    int quantite = 0;
+    char *designation = (char*) malloc(MAX*sizeof(char));
+    printf("Quel est le nom du produit ?");
+    scanf("%s", designation);
+
+    printf("Quel est le prix du produit ?");
+    scanf("%f", &prix);
+
+    printf("Quel est la quantite ?");
+    scanf("%d", &quantite);
+
+    T_Rayon *selec = magasin->liste_rayons;
+    if(selec){
+        ajouterProduit(selec, designation, prix, quantite);
+    } else printf("Select NULL");
+
+    afficherRayon(selec);
+
+    char rep[] = "n";
+    printf("FREE ?");
+    scanf("%s",rep);
+    if(rep == "o"){
+        supprimerRayon(magasin, nomRayon);
+        free(magasin);
+    }
+}
 
 
     // ============= MENU UTILISATEUR ============= */
-    char choix = '0';
+/*    char choix = '0';
     while (choix != '9') {
         printf("\n======================================");
         printf("\n1. Creer un magasin");
@@ -35,18 +66,25 @@ int main()
 
         switch (choix) {
             case '1' :
-                printf("Quelle est le nom du magasin ?");
-                char *nom;
-                scanf("%s", nom);
-                T_Magasin *magasin1 = creerMagasin(nom);
+            {
+                char *nomMagasin = (char*) malloc((MAX*sizeof(char)));
+                printf("Quel est le nom du magasin ? ");
+                scanf("%s", nomMagasin);
+                T_Magasin *magasin = creerMagasin(nomMagasin);
+            }
+
+
 
                 break;
 
             case '2' :
-                printf("Nom : ");
-                char * nom_new = malloc(50 * sizeof(char));
-                scanf("%s", nom_new);
-                ajouterRayon(magasin1, nom_new);
+            {
+                char *nomRayon = (char*) malloc(MAX*sizeof(char));
+                printf("Quel est le nom du rayon ?");
+                scanf("%s", nomRayon);
+                ajouterRayon( )
+            }
+
 
                 break;
 
@@ -79,4 +117,4 @@ int main()
     }
 
     return 0;
-}
+}*/

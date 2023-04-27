@@ -1,5 +1,6 @@
 #ifndef TP3_H_INCLUDED
 #define TP3_H_INCLUDED
+#define MAX 40 //Maximum de caractÃ¨res pour un nom
 
 // Structures et types
 struct Produit {
@@ -24,12 +25,12 @@ struct Magasin {
 typedef struct Magasin T_Magasin;
 
 
-// Création et initialisation des structures
+// Crï¿½ation et initialisation des structures
 T_Produit *creerProduit(char *designation, float prix, int quantite);
 T_Rayon *creerRayon(char *nom);
 T_Magasin *creerMagasin(char *nom);
 
-// fonction de permettant de comparer deux mots aphabétiquement
+// fonction de permettant de comparer deux mots aphabï¿½tiquement
 int ordreAlpha(char *nom1, char *nom2);
 
 // Ajout d'un rayon dans un magasin
@@ -50,7 +51,7 @@ int supprimerProduit(T_Rayon *rayon, char* designation_produit);
 // Suppression d'un rayon et de tous les produits qu'il contient
 int supprimerRayon(T_Magasin *magasin, char *nom_rayon);
 
-// Recherche des produits se situant dans une fourchette de prix entrée par l'utilisateur
+// Recherche des produits se situant dans une fourchette de prix entrï¿½e par l'utilisateur
 void rechercheProduits(T_Magasin *magasin, float prix_min, float prix_max);
 
 // Fusionner deux rayons

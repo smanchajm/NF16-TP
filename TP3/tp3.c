@@ -67,31 +67,32 @@ T_Magasin *creerMagasin(char *nom) {
  ******************************** */
 int ajouterRayon(T_Magasin *magasin, char *nomRayon) {
 
-    // Sélection des deux premiers rayons -> Cela va nous permettre de parcourir la liste chaînée
-    T_Rayon *rayonSelec = magasin->liste_rayons;
-    T_Rayon *rayonSelecSuivant = magasin->liste_rayons->suivant;
-
     // Retourne 0 si le nom est nul
     if(strlen(nomRayon)==0){
-        printf("Impossible.\nLes Informations sont erronées .\nVeuillez recommencer.");
+        printf("Impossible.\nLes Informations sont erronees .\nVeuillez recommencer.");
         return 0;
     }
 
     // Insertion du nouveau rayon en tête de liste
-    if((magasin->liste_rayons == NULL) || (strcmp(nomRayon, rayonSelec->nom_rayon) < 0)){
+    if((magasin->liste_rayons == NULL) || (strcmp(nomRayon, magasin->liste_rayons->nom_rayon) < 0)){
         T_Rayon *nouveauRayon = creerRayon(nomRayon);
-        magasin ->liste_rayons = nouveauRayon;
-        nouveauRayon->suivant = rayonSelec;
-        printf("Insertion du rayon en tête de liste.\n");
+        T_Rayon *tmp = magasin->liste_rayons;
+        magasin->liste_rayons = nouveauRayon;
+        nouveauRayon->suivant = tmp;
+        printf("Insertion du rayon en tete de liste.\n");
         return 1;
     }
 
+    // Sélection des deux premiers rayons -> Cela va nous permettre de parcourir la liste chaînée
+    T_Rayon *rayonSelec = magasin->liste_rayons;
+    T_Rayon *rayonSelecSuivant = magasin->liste_rayons->suivant;
+
     // Voir comment gérer le dernier rayon
     // Permet de trouver la place du nouveau rayon dans l'ordre alphabétique -> strcmp
-    while ((strcmp(rayonSelec->nom_rayon, nomRayon) < 0) && (strcmp(nomRayon, rayonSelecSuivant->nom_rayon) < 0)) {
+    while ((strcmp(nomRayon, rayonSelecSuivant->nom_rayon) < 0) &&(rayonSelecSuivant != NULL)) {
         // si le rayon existe déjà alors on retourne 0
         if (strcmp(nomRayon, rayonSelec->nom_rayon) == 0){
-            printf("Impossible.\nLe rayon existe déjà.\n");
+            printf("Impossible.\nLe rayon existe deja.\n");
             return 0;
         }
         rayonSelec = rayonSelecSuivant;
@@ -108,7 +109,7 @@ int ajouterRayon(T_Magasin *magasin, char *nomRayon) {
         nouveauRayon->suivant = rayonSelecSuivant;
         rayonSelec->suivant = nouveauRayon;
     }
-    printf("Le rayon est ajouté avec succès !\n");
+    printf("Le rayon est ajoute avec succès !\n");
     return 1;
 }
 
@@ -117,24 +118,25 @@ int ajouterRayon(T_Magasin *magasin, char *nomRayon) {
  * Ajout d'un produit dans un rayon
  ******************************** */
 int ajouterProduit(T_Rayon *rayon, char *designation, float prix, int quantite) {
-    T_Produit *produitSelec = rayon->liste_produits;
 
     // Retourne 0 si les informations sont impossibles
     if((strlen(designation)==0) || (prix <= 0) || (quantite <= 0)){
-        printf("Attention les informations renseignées sont incorrectes.\nVeuillez recommencer.\n");
+        printf("Attention les informations renseignees sont incorrectes.\nVeuillez recommencer.\n");
         return 0;
     }
     // Vérifier que le rayon existe !!
 
     // Insertion du produit en tête de liste
     if((rayon->liste_produits == NULL) || (prix < rayon->liste_produits->prix)){
-        printf("Insertion du produit en tête de liste.\n");
+        printf("Insertion du produit en tete de liste.\n");
+        T_Produit *tmp = rayon->liste_produits;
         T_Produit *nouveauProduit = creerProduit(designation, prix, quantite);
         rayon->liste_produits = nouveauProduit;
-        nouveauProduit->suivant = produitSelec;
+        nouveauProduit->suivant = tmp;
         return 1;
     }
 
+    T_Produit *produitSelec = rayon->liste_produits;
     // Emplacement du produit par prix
     while((produitSelec != NULL) && (prix >= produitSelec->suivant->prix)){
         // Vérification que le produit n'existe pas dans ce rayon
@@ -194,31 +196,35 @@ void afficherRayon(T_Rayon *rayon) {
         espaces(longmax-11);
         printf("Prix");
         espaces(15-4);
-        printf("Quantité en stock");
+        printf("Quantite en stock");
         espaces(1);
         printf("\n");
         sep(longmax + 37);
 
         T_Produit *produiSelec = rayon->liste_produits;
-        char prix[20];
-        char quantite[20];
+        /*char prix = (char) produiSelec->prix;
+        char quantite = (char) produiSelec->quantite_en_stock;*/
         while (produiSelec != NULL){
+
+        char prix[MAX], quantite[MAX];
+        sprintf(prix,"%.2f", produiSelec->prix);
+        sprintf(quantite,"%d", produiSelec->quantite_en_stock);
 
             // ATTENTION Voir les erreurs de BUFFER
 
             printf("%s", produiSelec->designation);
-            espaces(longmax - strlen(produiSelec->designation) + longmax-11);
+            espaces(longmax - strlen(produiSelec->designation));
 
             // Affichage et conversion des int en chaînes de caractères
-            itoa(produiSelec->prix, prix, 10);
-            printf("%s euros", produiSelec->prix);
+
+            printf("%s euros", prix);
             espaces(15 - (strlen(prix)+6) );
 
-            itoa(produiSelec->quantite_en_stock, quantite, 10);
-            printf("%s", produiSelec->quantite_en_stock);
+            printf("%s", quantite);
             espaces(17 - strlen(quantite));
 
             printf("\n");
+            produiSelec = produiSelec->suivant;
         }
         sep(longmax+37);
     } else{

@@ -6,6 +6,7 @@
 int main()
 {
 
+// Voir pour les strcopy avec le nom des rayons
 
     char *nomMagasin = (char*) malloc((MAX*sizeof(char)));
     printf("Quel est le nom du magasin ?");
@@ -58,7 +59,8 @@ int main()
         printf("\n6. Supprimer un produit");
         printf("\n7. Supprimer un rayon");
         printf("\n8. Rechercher un produit par prix");
-        printf("\n9. Quitter");
+        printf("\n9. Fusionner deux rayons");
+        printf("\n10. Quitter");
         printf("\n======================================");
         printf("\n   Votre choix ? ");
         choix = getchar();
@@ -107,6 +109,9 @@ int main()
                break;
 
             case '9' :
+                break;
+
+            case '10' :
                 printf("\n======== PROGRAMME TERMINE ========\n");
                 break;
 

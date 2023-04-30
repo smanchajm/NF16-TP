@@ -305,7 +305,71 @@ void rechercheProduits(T_Magasin *magasin, float prix_min, float prix_max) {
  * Fusionner deux rayons
  ********************* */
 void fusionnerRayons(T_Magasin *magasin) {
-    // TODO
+    T_Rayon *rayon1 = malloc(sizeof (T_Rayon));
+    T_Rayon *rayon2 = malloc(sizeof (T_Rayon));
+    char *nomRayon1 = (char*) malloc((MAX*sizeof(char)));
+    char *nomRayon2 = (char*) malloc((MAX*sizeof(char)));
+
+    // Saisie des noms des rayons
+    printf("Quel est le nom du premier rayon ?");
+    scanf("%s", nomRayon1);
+    printf("Quel est le nom du second rayon rayon ?");
+    scanf("%s", nomRayon2);
+
+    // Vérification que les noms des rayons sont valides
+    if((strlen(nomRayon1)==0) || (strlen(nomRayon2)==0) || (nomRayon1 == nomRayon2)) {
+        printf("Attention les noms sont invalides veuillez recommencer\n");
+        return;
+    }
+
+    // Recherche des rayons
+    T_Rayon *rayonSelec = magasin->liste_rayons;
+    while ((rayonSelec != NULL) && (rayon1 == NULL || rayon2 == NULL)){
+        if(rayonSelec->nom_rayon == nomRayon1){
+            rayon1 = rayonSelec;
+        }
+        if(rayonSelec->nom_rayon == nomRayon2){
+            rayon2 = rayonSelec;
+        }
+        rayonSelec = rayonSelec->suivant;
+    }
+
+    // Vérification que les rayons ont étés selectionné
+    if((rayon1 == NULL) || (rayon2 == NULL)){
+        printf("Attention un des rayons n'existe pas.\n");
+        return;
+    }
+
+    char *nomNouvRayon = (char*) malloc((MAX*sizeof(char)));
+    printf("Quel est le nom du nouveau rayon ?");
+    scanf("%s", nomNouvRayon);
+    if(nomNouvRayon == NULL){
+        printf("Ce nom est invalide.");
+        return;
+    }
+
+    // Voir comment ajouter le rayon dans la liste avec la fonction ajoutRayon
+
+    T_Rayon *nouvRayon = creerRayon(nomNouvRayon);
+    char * designation = (char*) malloc((MAX*sizeof(char)));
+
+    // Ajout des produits dans le nouveau rayon en utilisant la fonction ajouterProduit qui ajoute par prix croissant
+    T_Produit *produitSelec = rayon1->liste_produits;
+    while (produitSelec != NULL){
+        strcpy(designation, produitSelec->designation);
+        ajouterProduit(nouvRayon, designation, produitSelec->prix, produitSelec->quantite_en_stock);
+        produitSelec = produitSelec->suivant;
+    }
+    produitSelec = rayon2->liste_produits;
+    while (produitSelec != NULL){
+        strcpy(designation, produitSelec->designation);
+        ajouterProduit(nouvRayon, designation, produitSelec->prix, produitSelec->quantite_en_stock);
+        produitSelec = produitSelec->suivant;
+    }
+
+    free(rayon1);
+    free(rayon2);
+
 }
 
 

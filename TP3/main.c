@@ -7,6 +7,7 @@ int main()
 {
 
 // Voir pour les strcopy avec le nom des rayons
+// Attention débugger supprimerrayon
 
     char *nomMagasin = (char*) malloc((MAX*sizeof(char)));
     printf("Quel est le nom du magasin ?");
@@ -18,32 +19,48 @@ int main()
     scanf("%s", nomRayon);
     ajouterRayon(magasin, nomRayon);
 
-    float prix = 0;
-    int quantite = 0;
-    char *designation = (char*) malloc(MAX*sizeof(char));
-    printf("Quel est le nom du produit ?");
-    scanf("%s", designation);
-
-    printf("Quel est le prix du produit ?");
-    scanf("%f", &prix);
-
-    printf("Quel est la quantite ?");
-    scanf("%d", &quantite);
+    char n[] = "o";
 
     T_Rayon *selec = magasin->liste_rayons;
-    if(selec){
-        ajouterProduit(selec, designation, prix, quantite);
-    } else printf("Select NULL");
 
-    afficherRayon(selec);
+    while (strcmp(n, "o")==0) {
+        float prix = 0;
+        int quantite = 0;
+        char *designation = (char *) malloc(MAX * sizeof(char));
+        printf("Quel est le nom du produit ?");
+        scanf("%s", designation);
+
+        printf("Quel est le prix du produit ?");
+        scanf("%f", &prix);
+
+        printf("Quel est la quantite ?");
+        scanf("%d", &quantite);
+
+        printf("TEST");
+        ajouterProduit(selec, designation, prix, quantite);
+        printf("\nVoulez vous continuer ? o/n");
+        scanf("%s", &n);
+
+    }
+    printf("DONE");
+    afficherRayon(magasin->liste_rayons);
 
     char rep[] = "n";
     printf("FREE ?");
     scanf("%s",rep);
-    if(rep == "o"){
-        supprimerRayon(magasin, nomRayon);
+    if(strcmp("o", rep)==0){
+        int res;
+        res = supprimerRayon(magasin, nomRayon);
+        if(res == 1){
+            printf("Le rayon est bien supprimé !");
+        }
         free(magasin);
+        printf("FINISH");
     }
+    // ATTEBTION rajouter des conditions d'existence sur afficher produit
+    afficherRayon(magasin->liste_rayons);
+
+
 }
 
 

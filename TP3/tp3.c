@@ -138,10 +138,10 @@ int ajouterProduit(T_Rayon *rayon, char *designation, float prix, int quantite) 
 
     T_Produit *produitSelec = rayon->liste_produits;
     // Emplacement du produit par prix
-    while((produitSelec != NULL) && (prix >= produitSelec->suivant->prix)){
+    while((produitSelec->suivant != NULL) && (prix >= produitSelec->suivant->prix)){
         // Vérification que le produit n'existe pas dans ce rayon
         if(strcmp(designation, produitSelec)== 0){
-            printf("Impossible le produit existe déjà");
+            printf("Impossible le produit existe deja");
             return 0;
         }
         produitSelec = produitSelec->suivant;
@@ -153,7 +153,7 @@ int ajouterProduit(T_Rayon *rayon, char *designation, float prix, int quantite) 
     // Attention bien relier dans le bon ordre à VERIFIER
     nouveauProduit->suivant = produitSelec->suivant;
     produitSelec->suivant = nouveauProduit;
-    printf("Le produit est ajouté avec succès !\n");
+    printf("Le produit est ajoute avec succes !\n");
 
     return 1;
 }
@@ -252,7 +252,7 @@ int supprimerRayon(T_Magasin *magasin, char *nom_rayon) {
 
     // Recherche du rayon à supprimer dans le magasin
     // Si le rayon ne se trouve pas en tête de liste
-    if(magasin->liste_rayons->nom_rayon != nom_rayon) {
+    if(strcmp(magasin->liste_rayons->nom_rayon, nom_rayon) != 0) {
         while (((rayonSelec != NULL) && (rayonSelec->suivant->nom_rayon != nom_rayon))) {
             rayonSelec = rayonSelec->suivant;
         }
@@ -260,7 +260,7 @@ int supprimerRayon(T_Magasin *magasin, char *nom_rayon) {
         rayonPrec = rayonSelec;
         rayonSelec = rayonSelec->suivant;
     } else rayonSelec = magasin->liste_rayons;
-
+    printf("TEST22");
     // Que si le rayon existe (!= NULL)
     if(rayonSelec){
         T_Produit *tmp, *produitSelec = rayonSelec->liste_produits;
@@ -369,6 +369,12 @@ void fusionnerRayons(T_Magasin *magasin) {
 
     free(rayon1);
     free(rayon2);
+
+
+
+
+
+
 
 }
 

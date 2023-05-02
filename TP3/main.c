@@ -6,6 +6,8 @@
 int main()
 {
 
+    // BOUVLE inf affichage rayons
+
 // Voir pour les strcopy avec le nom des rayons
 // Attention débugger supprimerrayon
 /*
@@ -68,7 +70,7 @@ int main()
     // ============= MENU UTILISATEUR =============
     char choix = '0';
     int test = 0;
-    while (choix != '9') {
+    while (choix != 'q') {
 
         printf("\n======================================");
         if (test == 0) {
@@ -117,6 +119,7 @@ int main()
 
             case '3' :
             {
+                // VOIR RAYON NEXISTE PAS
                 float prix = 0;
                 int quantite = 0;
                 char *designation = (char*) malloc(MAX*sizeof(char));
@@ -160,6 +163,9 @@ int main()
                 break;
 
             case '4' :
+            {
+                afficherMagasin(magasin);
+            }
                 break;
 
             case '5' :
@@ -181,6 +187,27 @@ int main()
                 break;
 
             case '6' :
+            {
+                char *nomRayon = (char*) malloc(MAX*sizeof(char));
+                char *designation = (char*) malloc(MAX*sizeof(char));
+
+
+                printf("Quel est le nom du rayon ?");
+                scanf("%s", nomRayon);
+                viderBuffer();
+
+                printf("Quel est le nom du produit ?");
+                scanf("%s", designation);
+                viderBuffer();
+
+                T_Rayon *selec = magasin->liste_rayons;
+                while (strcmp(selec->nom_rayon, nomRayon)!=0){
+                    selec = selec->suivant;
+                }
+                int res;
+                res = supprimerProduit(selec, designation);
+                printf("%d", &res);
+            }
                 break;
 
             case '7' :

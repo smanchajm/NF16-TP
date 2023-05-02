@@ -171,12 +171,16 @@ void afficherMagasin(T_Magasin *magasin) {
         return;
     }
     printf("Le magasin %s vous propose : \n", magasin->nom);
-    T_Magasin* iter = magasin;
-    while(iter->liste_rayons != NULL) {
-        while(iter->liste_rayons->liste_produits != NULL){
+    T_Rayon * iter = magasin->liste_rayons;
+    T_Produit *iter2 =NULL;
+    while(iter != NULL) {
+        iter2 = iter->liste_produits;
+        while(iter2 != NULL){
             nb_produit ++;
+            iter2 = iter2->suivant;
         }
-        printf("Nom du rayon : %s || Nombre de produit : %d",iter->liste_rayons->nom_rayon, nb_produit);
+        printf("Nom du rayon : %s || Nombre de produit : %d\n",iter->nom_rayon, nb_produit);
+        iter = iter->suivant;
         nb_produit = 0;
     }
 }
@@ -263,7 +267,7 @@ int supprimerProduit(T_Rayon* rayon, char* designation_produit) {
 
     //On vérifie si le produit n'est pas en tête du rayon
     if (strcmp(rayon->liste_produits->designation,designation_produit) == 0){
-        rayon->liste_produits->suivant = rayon->liste_produits->suivant;
+        rayon->liste_produits = rayon->liste_produits->suivant;
         free(temp->designation);
         free(temp);
         return 1;

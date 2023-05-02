@@ -67,18 +67,26 @@ int main()
 
     // ============= MENU UTILISATEUR =============
     char choix = '0';
+    int test = 0;
     while (choix != '9') {
+
         printf("\n======================================");
-        printf("\n1. Creer un magasin");
-        printf("\n2. Ajouter un rayon au magasin");
-        printf("\n3. Ajouter un produit dans un rayon");
-        printf("\n4. Afficher les rayons du magasin");
-        printf("\n5. Afficher les produits d'un rayon");
-        printf("\n6. Supprimer un produit");
-        printf("\n7. Supprimer un rayon");
-        printf("\n8. Rechercher un produit par prix");
-        printf("\n9. Fusionner deux rayons");
-        printf("\n10. Quitter");
+        if (test == 0) {
+            printf("\n1. Creer un magasin");
+            printf("\nq. Quitter");
+            test = 1;
+        } else {
+            printf("\n1. Creer un magasin");
+            printf("\n2. Ajouter un rayon au magasin");
+            printf("\n3. Ajouter un produit dans un rayon");
+            printf("\n4. Afficher les rayons du magasin");
+            printf("\n5. Afficher les produits d'un rayon");
+            printf("\n6. Supprimer un produit");
+            printf("\n7. Supprimer un rayon");
+            printf("\n8. Rechercher un produit par prix");
+            printf("\n9. Fusionner deux rayons");
+            printf("\nq. Quitter");
+        }
         printf("\n======================================");
         printf("\n   Votre choix ? ");
         choix = getchar();
@@ -122,14 +130,13 @@ int main()
                 scanf("%s", designation);
                 viderBuffer();
 
-
                 printf("Quel est le prix du produit ?");
                 scanf("%f", &prix);
-
+                viderBuffer();
 
                 printf("Quel est la quantite ?");
                 scanf("%d", &quantite);
-
+                viderBuffer();
 
                 // Recherche du rayon
                 printf("%s\n",designation);
@@ -146,8 +153,8 @@ int main()
                 }
 
                 ajouterProduit(selec, designation, prix, quantite);
-                //free(designation);
-                //free(nomRayon);
+                free(designation);
+                free(nomRayon);
             }
 
                 break;
@@ -170,8 +177,6 @@ int main()
                 afficherRayon(selec);
                 free(nomRayon);
 
-
-
             }
                 break;
 
@@ -179,6 +184,20 @@ int main()
                 break;
 
             case '7' :
+            {
+                char *nomRayon = (char*) malloc(MAX*sizeof(char));
+
+                printf("Quel est le nom du rayon ?");
+                scanf("%s", nomRayon);
+                viderBuffer();
+
+                int res;
+                res = supprimerRayon(magasin, nomRayon);
+                if(res == 1){
+                    printf("Le rayon est bien supprime !");
+                }
+                free(nomRayon);
+            }
                break;
 
             case '8' :
@@ -187,8 +206,10 @@ int main()
             case '9' :
                 break;
 
-            case '10' :
+            case 'q' :
                 printf("\n======== PROGRAMME TERMINE ========\n");
+                free(magasin);
+                test = 0;
                 break;
 
             default :

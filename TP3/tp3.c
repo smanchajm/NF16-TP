@@ -164,7 +164,21 @@ int ajouterProduit(T_Rayon *rayon, char *designation, float prix, int quantite) 
  * Affichage de tous les rayons d'un magasin
  ***************************************** */
 void afficherMagasin(T_Magasin *magasin) {
-    // TODO
+    int nb_produit = 0;
+    // On test s'il y a des rayons ajoutés ou si le magasin est vide
+    if (magasin->liste_rayons == NULL){
+        printf("Rien dans le magasin");
+        return;
+    }
+    printf("Le magasin %s vous propose : \n", magasin->nom);
+    T_Magasin* iter = magasin;
+    while(iter->liste_rayons != NULL) {
+        while(iter->liste_rayons->liste_produits != NULL){
+            nb_produit ++;
+        }
+        printf("Nom du rayon : %s || Nombre de produit : %d",iter->liste_rayons->nom_rayon, nb_produit);
+        nb_produit = 0;
+    }
 }
 
 
@@ -237,9 +251,35 @@ void afficherRayon(T_Rayon *rayon) {
 /* **************************************
  * Suppression d'un produit dans un rayon
  ************************************** */
-int supprimerProduit(T_Rayon *rayon, char* designation_produit) {
-    // TODO
-    return 1;
+int supprimerProduit(T_Rayon* rayon, char* designation_produit) {
+    T_Produit* temp = rayon->liste_produits; //Mémoire tampon pour le rechainage
+    T_Produit* premier_produit = rayon->liste_produits; //Pointeur de tête pour l'itération
+
+    //Si le rayon ne contient aucun produit.
+    if (rayon->liste_produits == NULL){
+        printf("Le rayon est vide");
+        return 0;
+    }
+
+    //On vérifie si le produit n'est pas en tête du rayon
+    if (strcmp(rayon->liste_produits->designation,designation_produit) == 0){
+        rayon->liste_produits->suivant = rayon->liste_produits->suivant;
+        free(temp->designation);
+        free(temp);
+        return 1;
+    }
+
+    //Tant que le rayon n'est pas finit, on cherche si le produit existe
+    while (premier_produit->suivant != NULL){
+        if (strcmp(premier_produit->suivant->designation,designation_produit) == 0){
+            temp = premier_produit->suivant;
+            premier_produit->suivant = premier_produit->suivant->suivant;
+            free(temp);
+            return 1;
+        }
+        premier_produit = premier_produit->suivant;
+    }
+    return 0;
 }
 
 

@@ -5,8 +5,8 @@
 
 int main()
 {
-
-    // BOUVLE inf affichage rayons
+// Voir affichage des rayon sans produit
+    // BOUcLE inf affichage rayons
 
 // Voir pour les strcopy avec le nom des rayons
 // Attention débugger supprimerrayon
@@ -78,7 +78,6 @@ int main()
             printf("\nq. Quitter");
             test = 1;
         } else {
-            printf("\n1. Creer un magasin");
             printf("\n2. Ajouter un rayon au magasin");
             printf("\n3. Ajouter un produit dans un rayon");
             printf("\n4. Afficher les rayons du magasin");
@@ -99,20 +98,21 @@ int main()
         switch (choix) {
             case '1' :
             {
-                char *nomMagasin = (char*) malloc((MAX*sizeof(char)));
+                char nomMagasin[MAX];
                 printf("Quel est le nom du magasin ? ");
-                scanf("%s", nomMagasin);
-                viderBuffer();
+                fgets(nomMagasin, 100, stdin);
+                nomMagasin[strcspn(nomMagasin, "\n")] = 0;
                 magasin = creerMagasin(nomMagasin);
             }
                 break;
 
             case '2' :
             {
-                char *nomRayon = (char*) malloc(MAX*sizeof(char));
+                char nomRayon[MAX];
                 printf("Quel est le nom du rayon ?");
-                scanf("%s", nomRayon);
-                viderBuffer();
+                fgets(nomRayon, 100, stdin);
+                nomRayon[strcspn(nomRayon, "\n")] = 0;
+
                 ajouterRayon(magasin, nomRayon);
             }
                 break;
@@ -122,12 +122,12 @@ int main()
                 // VOIR RAYON NEXISTE PAS
                 float prix = 0;
                 int quantite = 0;
-                char *designation = (char*) malloc(MAX*sizeof(char));
-                char *nomRayon = (char*) malloc(MAX*sizeof(char));
+                char nomRayon[MAX];
+                char designation[MAX];
 
                 printf("Quel est le nom du rayon ?");
-                scanf("%s", nomRayon);
-                viderBuffer();
+                fgets(nomRayon, 100, stdin);
+                nomRayon[strcspn(nomRayon, "\n")] = 0;
 
                 printf("Quel est le nom du produit ?");
                 scanf("%s", designation);
@@ -142,22 +142,23 @@ int main()
                 viderBuffer();
 
                 // Recherche du rayon
-                printf("%s\n",designation);
                 T_Rayon *selec = magasin->liste_rayons;
-                printf("%s\n",selec->nom_rayon);
                 while (selec != NULL){
                     if(strcmp(selec->nom_rayon, nomRayon)== 0) break;
                     selec = selec->suivant;
                 }
-                printf("%s",selec->nom_rayon);
                 if (selec == NULL){
-                    printf("ERREUR");
+                    printf("ERREUR le rayon n'existe pas.");
                     break;
                 }
+                printf("Test\n");
 
                 ajouterProduit(selec, designation, prix, quantite);
-                free(designation);
-                free(nomRayon);
+                printf("TEST2");
+
+                // VOIR BOUCLE free
+                //free(designation);
+                //free(nomRayon);
             }
 
                 break;
@@ -170,43 +171,46 @@ int main()
 
             case '5' :
             {
-                char *nomRayon = malloc(MAX * sizeof(char));
+                char nomRayon[MAX];
 
                 printf("Quel est le nom du rayon ?");
-                scanf("%s", nomRayon);
+                fgets(nomRayon, 100, stdin);
+                nomRayon[strcspn(nomRayon, "\n")] = 0;
 
                 // Recherche du rayon
                 T_Rayon *selec = magasin->liste_rayons;
                 while (strcmp(selec->nom_rayon, nomRayon)!=0){
                     selec = selec->suivant;
+                    if(selec == NULL){
+                        break;
+                    }
                 }
                 afficherRayon(selec);
-                free(nomRayon);
 
             }
                 break;
 
             case '6' :
             {
-                char *nomRayon = (char*) malloc(MAX*sizeof(char));
-                char *designation = (char*) malloc(MAX*sizeof(char));
+                char nomRayon[MAX];
+                char designation[MAX];
 
 
                 printf("Quel est le nom du rayon ?");
-                scanf("%s", nomRayon);
-                viderBuffer();
+                fgets(nomRayon, 100, stdin);
+                nomRayon[strcspn(nomRayon, "\n")] = 0;
 
                 printf("Quel est le nom du produit ?");
-                scanf("%s", designation);
-                viderBuffer();
+                fgets(designation, 100, stdin);
+                nomRayon[strcspn(designation, "\n")] = 0;
 
                 T_Rayon *selec = magasin->liste_rayons;
                 while (strcmp(selec->nom_rayon, nomRayon)!=0){
                     selec = selec->suivant;
+                    if (selec == NULL) break;
                 }
-                int res;
-                res = supprimerProduit(selec, designation);
-                printf("%d", &res);
+                supprimerProduit(selec, designation);
+
             }
                 break;
 
@@ -231,10 +235,21 @@ int main()
                break;
 
             case '9' :
+            {
+                fusionnerRayons(magasin);
+            }
                 break;
 
             case 'q' :
                 printf("\n======== PROGRAMME TERMINE ========\n");
+                T_Rayon *selec = magasin->liste_rayons;
+                char *tmp;
+
+                while (selec != NULL){
+                    tmp = selec->nom_rayon;
+                    selec = selec->suivant;
+                    supprimerRayon(magasin, tmp);
+                }
                 free(magasin);
                 test = 0;
                 break;

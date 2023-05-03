@@ -60,5 +60,6 @@ void fusionnerRayons(T_Magasin *magasin);
 
 // UTILS
 void viderBuffer() ;
+T_Rayon * rechercherRayon(char *nomRayon, T_Magasin *magasin);
 
 #endif // TP3_H_INCLUDED

@@ -307,6 +307,7 @@ int supprimerProduit(T_Rayon* rayon, char* designation_produit) {
         rayon->liste_produits = rayon->liste_produits->suivant;
         free(temp->designation);
         free(temp);
+        printf("SUPTETE");
         return 1;
     }
 
@@ -315,6 +316,7 @@ int supprimerProduit(T_Rayon* rayon, char* designation_produit) {
         if (strcmp(premier_produit->suivant->designation,designation_produit) == 0){
             temp = premier_produit->suivant;
             premier_produit->suivant = premier_produit->suivant->suivant;
+            printf("SUP");
             free(temp);
             return 1;
         }
@@ -373,39 +375,88 @@ int supprimerRayon(T_Magasin *magasin, char *nom_rayon) {
 
 
 
-void ajouterProduitClasse(head_classe *tete_liste, char* designation, float prix, int quantite, T_Rayon* rayon) {
+/*void ajouterProduitClasse(head_classe *tete_liste, char* designation, float prix, int quantite, T_Rayon* rayon) {
     // On crÃ©e une nouvelle cellule struct Classe
-    printf("NON");
+    printf("DEBUT");
     struct Classe* new_list = malloc(sizeof(struct Classe));
-    printf("NON2");
+    new_list->designation = designation;
+    new_list->prix = prix;
+    new_list->rayon = rayon;
+    new_list->quantite = quantite;
+    printf("MID");
+    new_list->suivant = NULL;
+    head_classe *iter = tete_liste;
+    struct Classe* prec = NULL;
+    printf("FIN");
+
+    // Si la liste Classe est nulle, la cellule nouvelle doit Ãªtre au dÃ©but
+    if (*tete_liste == NULL) {
+        printf("NULLLL");
+        //printf("%s", tete_liste->designation);
+        *tete_liste = new_list;
+        //(*tete_liste)->suivant = NULL;
+        printf("TEST");
+        return;
+    } else {
+        struct Classe* iter = *tete_liste;
+        struct Classe* prec = NULL;
+
+        printf("TEST ELSE");
+        while((*iter)->suivant != NULL){
+            if((*iter)->suivant->prix < new_list->prix){
+                prec = *iter;
+                *iter = (*iter)->suivant;
+            }
+        }
+        prec->suivant = new_list;
+        new_list->suivant = (*iter)->suivant->suivant;
+    }
+}*/
+
+void ajouterProduitClasse(head_classe *tete_liste, char* designation, float prix, int quantite, T_Rayon* rayon) {
+    // On crée une nouvelle cellule struct Classe
+    struct Classe* new_list = malloc(sizeof(struct Classe));
     new_list->designation = designation;
     new_list->prix = prix;
     new_list->rayon = rayon;
     new_list->quantite = quantite;
     new_list->suivant = NULL;
-    head_classe *iter = tete_liste->produit;
-    struct Classe* prec = NULL;
 
-    printf("%s", tete_liste->produit);
-    // Si la liste Classe est nulle, la cellule nouvelle doit Ãªtre au dÃ©but
-    if (tete_liste->produit == NULL) {
-        printf("R2");
-        tete_liste = new_list;
-        tete_liste->produit->suivant = NULL;
+    // Si la liste Classe est nulle, la cellule nouvelle doit être au début
+    if (*tete_liste == NULL) {
+        *tete_liste = new_list;
+        (*tete_liste)->suivant = NULL;
+        return;
     }
-        // Sinon, on la place correctement par ordre des prix croissant
     else {
-        printf("R1");
-        while(iter->produit->suivant != NULL){
-            if(iter->produit->suivant->prix < new_list->prix){
+        struct Classe* iter = *tete_liste;
+        struct Classe* prec = NULL;
+        printf("TEST3");
+
+
+        while((iter)->suivant != NULL){
+            if((iter)->suivant->prix < new_list->prix){
                 prec = iter;
-                iter = iter->produit->suivant;
+                iter = iter->suivant;
+            } else {
+                break;  // Sortir de la boucle si on a trouvé l'emplacement pour la nouvelle cellule
             }
         }
-        prec->suivant = new_list;
-        new_list->suivant = iter->produit->suivant->suivant;
+
+
+
+        if(prec == NULL){
+            // Si la nouvelle cellule doit être au début de la liste
+            new_list->suivant = *tete_liste;
+            *tete_liste = new_list;
+        }else{
+            // Insérer la nouvelle cellule entre prec et iter
+            prec->suivant = new_list;
+            new_list->suivant = iter;
+        }
     }
 }
+
 
 
 
@@ -418,10 +469,7 @@ void rechercheProduits(T_Magasin *magasin, float prix_min, float prix_max) {
 
     // CrÃ©ation de la Liste de type Classe, et de head, pointeur de tÃªte vers la liste
     struct Classe* List;
-    head_classe *head = malloc(sizeof(head_classe));
-    head->produit = NULL;
-
-    printf("TEST1");
+    head_classe head = NULL;
 
     T_Rayon* actuel_rayon = magasin->liste_rayons;
     // Si le magasin est vide, il n'y a rien Ã  chercher
@@ -435,32 +483,29 @@ void rechercheProduits(T_Magasin *magasin, float prix_min, float prix_max) {
             if(produit_actuel->prix > prix_min && produit_actuel->prix < prix_max){
                 printf("%s", produit_actuel->designation);
                 // On ajoute le dit produit et on le transforme en cellule Classe.
-                ajouterProduitClasse(head, produit_actuel->designation, produit_actuel->prix, produit_actuel->quantite_en_stock, actuel_rayon);
-                printf("OUI");
+                ajouterProduitClasse(&head, produit_actuel->designation, produit_actuel->prix, produit_actuel->quantite_en_stock, actuel_rayon);
+
             }
             produit_actuel = produit_actuel->suivant;
         }
         actuel_rayon = actuel_rayon->suivant;
     }
-    printf("TEST2");
-
     // Si aucune cellule Classe, on a trouvÃ© aucun produit correspondant aux critÃ¨res
-    if (head->produit == NULL){
+    if (head == NULL){
         printf("Aucun produit dans cette intervalle n'a Ã©tÃ© trouvÃ©. \n");
     }
     else {
         // Iter pointe vers la tÃªte de la chaine Classe
         head_classe *iter = head;
-
-        while(iter != NULL){
-            printf("TESR5");
-            printf("Marque : %s || Prix : %f || QuantitÃ© en stock : %d || Rayon : %s \n", iter->produit->designation, iter->produit->prix, iter->produit->quantite, iter->produit->rayon->nom_rayon);
-            iter = iter->produit->suivant;
+        while(*iter != NULL){
+            printf("Marque : %s || Prix : %f || QuantitÃ© en stock : %d || Rayon : %s \n", (*iter)->designation, (*iter)->prix, (*iter)->quantite, (*iter)->rayon->nom_rayon);
+            *iter = (*iter)->suivant;
         }
-        printf("TEST4");
-
     }
 }
+
+
+
 T_Rayon* rechercheRayons (T_Magasin *magasin, char * nomRayon){
     T_Rayon * premier_rayon = magasin->liste_rayons;
     while ((magasin->liste_rayons!= NULL) && (strcmp(nomRayon,magasin->liste_rayons->nom_rayon)!=0)){

@@ -71,13 +71,11 @@ struct Classe{
     struct Classe* suivant;
 };
 
-//typedef struct Classe* head_classe;
-
-typedef struct head_classe{
-    struct Classe *produit;
-}head_classe;
+typedef struct Classe* head_classe;
 
 void ajouterProduitClasse(head_classe *tete_liste, char* designation, float prix, int quantite, T_Rayon* rayon);
+
+
 
 
 #endif // TP3_H_INCLUDED

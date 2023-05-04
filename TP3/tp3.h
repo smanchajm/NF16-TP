@@ -62,4 +62,22 @@ void fusionnerRayons(T_Magasin *magasin);
 void viderBuffer() ;
 T_Rayon * rechercherRayon(char *nomRayon, T_Magasin *magasin);
 
+
+struct Classe{
+    char* designation;
+    float prix;
+    int quantite;
+    T_Rayon *rayon;
+    struct Classe* suivant;
+};
+
+//typedef struct Classe* head_classe;
+
+typedef struct head_classe{
+    struct Classe *produit;
+}head_classe;
+
+void ajouterProduitClasse(head_classe *tete_liste, char* designation, float prix, int quantite, T_Rayon* rayon);
+
+
 #endif // TP3_H_INCLUDED

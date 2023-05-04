@@ -373,14 +373,94 @@ int supprimerRayon(T_Magasin *magasin, char *nom_rayon) {
 
 
 
-/* **************************************************************************************
- * Recherche des produits se situant dans une fourchette de prix entr�e par l'utilisateur
- ************************************************************************************** */
-void rechercheProduits(T_Magasin *magasin, float prix_min, float prix_max) {
-    // TODO
+void ajouterProduitClasse(head_classe *tete_liste, char* designation, float prix, int quantite, T_Rayon* rayon) {
+    // On crée une nouvelle cellule struct Classe
+    printf("NON");
+    struct Classe* new_list = malloc(sizeof(struct Classe));
+    printf("NON2");
+    new_list->designation = designation;
+    new_list->prix = prix;
+    new_list->rayon = rayon;
+    new_list->quantite = quantite;
+    new_list->suivant = NULL;
+    head_classe *iter = tete_liste->produit;
+    struct Classe* prec = NULL;
+
+    printf("%s", tete_liste->produit);
+    // Si la liste Classe est nulle, la cellule nouvelle doit être au début
+    if (tete_liste->produit == NULL) {
+        printf("R2");
+        tete_liste = new_list;
+        tete_liste->produit->suivant = NULL;
+    }
+        // Sinon, on la place correctement par ordre des prix croissant
+    else {
+        printf("R1");
+        while(iter->produit->suivant != NULL){
+            if(iter->produit->suivant->prix < new_list->prix){
+                prec = iter;
+                iter = iter->produit->suivant;
+            }
+        }
+        prec->suivant = new_list;
+        new_list->suivant = iter->produit->suivant->suivant;
+    }
 }
 
 
+
+
+
+/* **************************************************************************************
+ * Recherche des produits se situant dans une fourchette de prix entr�e par l'utilisateur
+ ************************************************************************************** */
+void rechercheProduits(T_Magasin *magasin, float prix_min, float prix_max) {
+
+    // Création de la Liste de type Classe, et de head, pointeur de tête vers la liste
+    struct Classe* List;
+    head_classe *head = malloc(sizeof(head_classe));
+    head->produit = NULL;
+
+    printf("TEST1");
+
+    T_Rayon* actuel_rayon = magasin->liste_rayons;
+    // Si le magasin est vide, il n'y a rien �  chercher
+    if(magasin->liste_rayons == NULL) {
+        return;
+    }
+    // On traverse les rayons de notre magasin, jusqu'a trouver un produit P tel que : min prix < prix P < max prix.
+    while(actuel_rayon != NULL){
+        T_Produit* produit_actuel = actuel_rayon->liste_produits;
+        while(produit_actuel != NULL){
+            if(produit_actuel->prix > prix_min && produit_actuel->prix < prix_max){
+                printf("%s", produit_actuel->designation);
+                // On ajoute le dit produit et on le transforme en cellule Classe.
+                ajouterProduitClasse(head, produit_actuel->designation, produit_actuel->prix, produit_actuel->quantite_en_stock, actuel_rayon);
+                printf("OUI");
+            }
+            produit_actuel = produit_actuel->suivant;
+        }
+        actuel_rayon = actuel_rayon->suivant;
+    }
+    printf("TEST2");
+
+    // Si aucune cellule Classe, on a trouvé aucun produit correspondant aux critères
+    if (head->produit == NULL){
+        printf("Aucun produit dans cette intervalle n'a été trouvé. \n");
+    }
+    else {
+        // Iter pointe vers la tête de la chaine Classe
+        head_classe *iter = head;
+
+        while(iter != NULL){
+            printf("TESR5");
+            printf("Marque : %s || Prix : %f || Quantité en stock : %d || Rayon : %s \n", iter->produit->designation, iter->produit->prix, iter->produit->quantite, iter->produit->rayon->nom_rayon);
+            iter = iter->produit->suivant;
+        }
+        printf("TEST4");
+
+    }
+}
 T_Rayon* rechercheRayons (T_Magasin *magasin, char * nomRayon){
     T_Rayon * premier_rayon = magasin->liste_rayons;
     while ((magasin->liste_rayons!= NULL) && (strcmp(nomRayon,magasin->liste_rayons->nom_rayon)!=0)){

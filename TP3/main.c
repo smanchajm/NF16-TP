@@ -232,6 +232,20 @@ int main()
                break;
 
             case '8' :
+            {
+                float min = 0, max = 0;
+
+                printf("Quel est le minimum ?");
+                scanf("%f", &min);
+                viderBuffer();
+
+                printf("Quel est le maximum ?");
+                scanf("%f", &max);
+                viderBuffer();
+
+                rechercheProduits(magasin, min, max);
+
+            }
                break;
 
             case '9' :

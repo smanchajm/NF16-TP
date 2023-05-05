@@ -74,11 +74,11 @@ int ajouterRayon(T_Magasin *magasin, char *nomRayon) {
     }
 
     // Insertion du nouveau rayon en tête de liste
+    if ((magasin->liste_rayons != NULL) && strcmp(nomRayon, magasin->liste_rayons->nom_rayon) == 0){
+        printf("Impossible.\nLe rayon existe deja.\n");
+        return 0;
+    }
     if((magasin->liste_rayons == NULL) || (strcmp(nomRayon, magasin->liste_rayons->nom_rayon) < 0)){
-        if ((magasin->liste_rayons != NULL) && strcmp(nomRayon, magasin->liste_rayons->nom_rayon) == 0){
-            printf("Impossible.\nLe rayon existe deja.\n");
-            return 0;
-        }
         T_Rayon *nouveauRayon = creerRayon(nomRayon);
         T_Rayon *tmp = magasin->liste_rayons;
         magasin->liste_rayons = nouveauRayon;
@@ -165,7 +165,7 @@ int ajouterProduit(T_Rayon *rayon, char *designation, float prix, int quantite) 
     // Emplacement du produit par prix
     while((produitSelec->suivant != NULL) && (prix >= produitSelec->suivant->prix)){
         // Vérification que le produit n'existe pas dans ce rayon
-        if(strcmp(designation, produitSelec->designation)== 0){
+        if(strcmp(designation, produitSelec->suivant->designation)== 0){
             printf("Impossible le produit existe deja");
             return 0;
         }
@@ -292,7 +292,7 @@ int supprimerProduit(T_Rayon* rayon, char* designation_produit) {
         printf("Impossible le rayon n'existe pas.");
         return 0;
     }
-
+    printf("TEST");
     T_Produit* temp = rayon->liste_produits; //Mémoire tampon pour le rechainage
     T_Produit* premier_produit = rayon->liste_produits; //Pointeur de tÃªte pour l'itÃ©ration
 
@@ -301,9 +301,14 @@ int supprimerProduit(T_Rayon* rayon, char* designation_produit) {
         printf("Le rayon est vide");
         return 0;
     }
+    printf("\n%s", rayon->liste_produits->designation);
+    printf("\n%s\n", designation_produit);
+    printf("%d", strcmp(rayon->liste_produits->designation,designation_produit) == 0);
 
     //On vÃ©rifie si le produit n'est pas en tÃªte du rayon
-    if (strcmp(rayon->liste_produits->designation,designation_produit) == 0){
+
+    if (strcmp(rayon->liste_produits->designation, designation_produit)==0){
+        printf("sup2");
         rayon->liste_produits = rayon->liste_produits->suivant;
         free(temp->designation);
         free(temp);
@@ -330,47 +335,52 @@ int supprimerProduit(T_Rayon* rayon, char* designation_produit) {
 /* *************************************************************
  * Suppression d'un rayon et de tous les produits qu'il contient
  ************************************************************* */
-int supprimerRayon(T_Magasin *magasin, char *nom_rayon) {
-    T_Rayon *rayonPrec, *rayonSelec = magasin->liste_rayons;
+int supprimerRayon(T_Magasin *magasin, char *nom_rayon){
+    if (magasin->liste_rayons == NULL){
+        printf("\nAttention, le magasin est vide.\n");
+        return 0;
+    }
 
-    // Recherche du rayon à supprimer dans le magasin
-    // Si le rayon ne se trouve pas en tête de liste
-    if(strcmp(magasin->liste_rayons->nom_rayon, nom_rayon) != 0) {
-        while (((rayonSelec != NULL) && (rayonSelec->suivant->nom_rayon != nom_rayon))) {
-            rayonSelec = rayonSelec->suivant;
-        }
-        // Permet de garder le rayon précédent pour reformer la chaîne
-        rayonPrec = rayonSelec;
-        rayonSelec = rayonSelec->suivant;
-    } else rayonSelec = magasin->liste_rayons;
-    printf("TEST22");
-    // Que si le rayon existe (!= NULL)
-    if(rayonSelec){
-        T_Produit *tmp, *produitSelec = rayonSelec->liste_produits;
-        // Suppression de tous les produits d'un rayon (tmp permet de garder le lien vers le produit suivant)
-        while (produitSelec != NULL){
+    // Si le rayon est en tête de liste
+    if (strcmp(magasin->liste_rayons->nom_rayon, nom_rayon) == 0){
+        T_Produit *produitSelec = magasin->liste_rayons->liste_produits, *tmp;
+        while(produitSelec != NULL){
             tmp = produitSelec;
             produitSelec = produitSelec->suivant;
             free(tmp);
         }
-        // Si le rayon est en tête de chaîne
-        if(rayonSelec == magasin->liste_rayons){
-            magasin->liste_rayons = rayonSelec->suivant;
-            free(rayonSelec);
+        //suppression du rayon
+        magasin->liste_rayons = magasin->liste_rayons->suivant;
+        free(magasin->liste_rayons);
+        printf("\nLe rayon est supprime de la tête de liste\n");
+        return 1;
+    }
+    // Si le rayon n'est pas en tête de liste
+    else{
+        T_Rayon *rayonSelec = magasin->liste_rayons;
+        T_Rayon *rayonSelecSuivant = rayonSelec->suivant;
+        while ( rayonSelecSuivant != NULL && strcmp(rayonSelecSuivant->nom_rayon, nom_rayon) !=0 ){
+            rayonSelec = rayonSelecSuivant;
+            rayonSelecSuivant = rayonSelecSuivant->suivant;
+        }
+        if (rayonSelecSuivant == NULL){
+            printf("\nCe rayon n'existe pas, impossible de le supprimer\n");
+            return 0;
+        }
+        // Si trouve en milieu de liste alors on reforme le chainage
+        if (strcmp(rayonSelecSuivant->nom_rayon, nom_rayon) ==0){
+            T_Produit *produitSelec = rayonSelec->suivant->liste_produits, *tmp;
+            while (produitSelec != NULL){
+                tmp = produitSelec;
+                produitSelec = produitSelec->suivant;
+                free(tmp);
+            }
+            free(rayonSelec->suivant);
+            rayonSelec->suivant = rayonSelecSuivant->suivant;
+            printf("\nLe rayon a bien ete supprime.\n", nom_rayon, magasin->nom);
             return 1;
         }
-
-        // Autrement suppression du rayon et reformation du chaînage
-        rayonPrec->suivant = rayonSelec->suivant;
-        free(rayonSelec);
-    } else{
-        printf("Impossible le rayon n'existe pas.\n");
-        return 0;
     }
-
-
-
-    return 1;
 }
 
 

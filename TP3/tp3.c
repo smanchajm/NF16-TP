@@ -126,14 +126,8 @@ int ajouterProduit(T_Rayon *rayon, char *designation, float prix, int quantite) 
     // Voir insertion avec de mauvaises val
 
     // Retourne 0 si les informations sont impossibles
-    if((strlen(designation)==0)){
-        printf("Attention les desi renseignees sont incorrectes.\nVeuillez recommencer.\n");
-    }
-    if((prix <= 0)){
-        printf("Attention les prix renseignees sont incorrectes.\nVeuillez recommencer.\n");
-    }
-    if((quantite <= 0)){
-        printf("Attention les quantite renseignees sont incorrectes.\nVeuillez recommencer.\n");
+    if((strlen(designation)==0) || (prix <= 0) || (quantite <= 0)){
+        printf("Attention les informations renseignees sont incorrectes.\nVeuillez recommencer.\n");
         return 0;
     }
 
@@ -291,7 +285,6 @@ int supprimerProduit(T_Rayon* rayon, char* designation_produit) {
         printf("Impossible le rayon n'existe pas.");
         return 0;
     }
-    printf("TEST");
     T_Produit* temp = rayon->liste_produits; //Mémoire tampon pour le rechainage
     T_Produit* premier_produit = rayon->liste_produits; //Pointeur de tÃªte pour l'itÃ©ration
 
@@ -300,18 +293,14 @@ int supprimerProduit(T_Rayon* rayon, char* designation_produit) {
         printf("Le rayon est vide");
         return 0;
     }
-    printf("\n%s", rayon->liste_produits->designation);
-    printf("\n%s\n", designation_produit);
-    printf("%d", strcmp(rayon->liste_produits->designation,designation_produit) == 0);
+
 
     //On vÃ©rifie si le produit n'est pas en tÃªte du rayon
 
     if (strcmp(rayon->liste_produits->designation, designation_produit)==0){
-        printf("sup2");
         rayon->liste_produits = rayon->liste_produits->suivant;
         free(temp->designation);
         free(temp);
-        printf("SUPTETE");
         return 1;
     }
 
@@ -320,7 +309,6 @@ int supprimerProduit(T_Rayon* rayon, char* designation_produit) {
         if (strcmp(premier_produit->suivant->designation,designation_produit) == 0){
             temp = premier_produit->suivant;
             premier_produit->suivant = premier_produit->suivant->suivant;
-            printf("SUP");
             free(temp);
             return 1;
         }
@@ -342,7 +330,6 @@ int supprimerRayon(T_Magasin *magasin, char *nom_rayon){
 
     // Si le rayon est en tête de liste
     if (strcmp(magasin->liste_rayons->nom_rayon, nom_rayon) == 0){
-        printf("TEST1");
         T_Produit *produitSelec = magasin->liste_rayons->liste_produits, *tmp;
         while(produitSelec != NULL){
             tmp = produitSelec;
@@ -359,8 +346,6 @@ int supprimerRayon(T_Magasin *magasin, char *nom_rayon){
     }
     // Si le rayon n'est pas en tête de liste
     else{
-        printf("TEST2");
-
         T_Rayon *rayonSelec = magasin->liste_rayons;
         T_Rayon *rayonSelecSuivant = rayonSelec->suivant;
         while ( rayonSelecSuivant != NULL && strcmp(rayonSelecSuivant->nom_rayon, nom_rayon) !=0 ){
@@ -373,7 +358,6 @@ int supprimerRayon(T_Magasin *magasin, char *nom_rayon){
         }
         // Si trouve en milieu de liste alors on reforme le chainage
         if (strcmp(rayonSelecSuivant->nom_rayon, nom_rayon) ==0){
-            printf("TEST3");
 
             T_Produit *produitSelec = rayonSelec->suivant->liste_produits, *tmp;
             while (produitSelec != NULL){
@@ -381,11 +365,9 @@ int supprimerRayon(T_Magasin *magasin, char *nom_rayon){
                 produitSelec = produitSelec->suivant;
                 free(tmp);
             }
-            printf("TEST3");
             T_Rayon *tmp2 = rayonSelecSuivant->suivant;
             free(rayonSelec->suivant);
             rayonSelec->suivant = tmp2;
-            printf("TEST4");
             printf("\nLe rayon a bien ete supprime.\n", nom_rayon, magasin->nom);
             return 1;
         }
@@ -624,9 +606,7 @@ void fusionnerRayons(T_Magasin *magasin) {
             produitSelec = produitSelec->suivant;
     }
     printf("Les rayons sont fusionnes");
-    printf("%s", rayon1->nom_rayon);
     supprimerRayon(magasin, rayon1->nom_rayon);
-    printf("%s", rayon2->nom_rayon);
     supprimerRayon(magasin, rayon2->nom_rayon);
 }
 

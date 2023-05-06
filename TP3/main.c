@@ -5,65 +5,6 @@
 
 int main()
 {
-// Voir affichage des rayon sans produit
-    // BOUcLE inf affichage rayons
-
-// Voir pour les strcopy avec le nom des rayons
-// Attention débugger supprimerrayon
-/*
-    char *nomMagasin = (char*) malloc((MAX*sizeof(char)));
-    printf("Quel est le nom du magasin ?");
-    scanf("%s", nomMagasin);
-    T_Magasin *magasin = creerMagasin(nomMagasin);
-
-    char *nomRayon = (char*) malloc(MAX*sizeof(char));
-    printf("Quel est le nom du rayon ?");
-    scanf("%s", nomRayon);
-    ajouterRayon(magasin, nomRayon);
-
-    char n[] = "o";
-
-    T_Rayon *selec = magasin->liste_rayons;
-
-    // ATTENTIONS DOUBLONS produits
-    while (strcmp(n, "o")==0) {
-        float prix = 0;
-        int quantite = 0;
-        char *designation = (char *) malloc(MAX * sizeof(char));
-        printf("Quel est le nom du produit ?");
-        scanf("%s", designation);
-
-        printf("Quel est le prix du produit ?");
-        scanf("%f", &prix);
-
-        printf("Quel est la quantite ?");
-        scanf("%d", &quantite);
-
-        printf("TEST");
-        ajouterProduit(selec, designation, prix, quantite);
-        printf("\nVoulez vous continuer ? o/n");
-        scanf("%s", &n);
-
-    }
-    printf("DONE");
-    afficherRayon(magasin->liste_rayons);
-
-    char rep[] = "n";
-    printf("FREE ?");
-    scanf("%s",rep);
-    if(strcmp("o", rep)==0){
-        int res;
-        res = supprimerRayon(magasin, nomRayon);
-        if(res == 1){
-            printf("Le rayon est bien supprime !");
-        }
-        free(magasin);
-        printf("FINISH");
-    }
-    // ATTEBTION rajouter des conditions d'existence sur afficher produit
-    afficherRayon(magasin->liste_rayons);*/
-
-
 
     T_Magasin *magasin = NULL;
 
@@ -127,7 +68,7 @@ int main()
                 char nomRayon[MAX];
                 char designation[MAX];
 
-                /*printf("Quel est le nom du rayon ?");
+                printf("Quel est le nom du rayon ?");
                 scanf("%s", nomRayon);
                 viderBuffer();
 
@@ -153,17 +94,14 @@ int main()
                 if (selec == NULL){
                     printf("ERREUR le rayon n'existe pas.");
                     break;
-                }*/
-                T_Rayon *selec = magasin->liste_rayons;
+                }
+
+                /*T_Rayon *selec = magasin->liste_rayons;
                 char nom2[] = "clem";
                 //ajouterProduit(selec, designation, prix, quantite);
                 ajouterProduit(selec, nom2, 12, 77);
-                ajouterProduit(selec->suivant, nom2, 12, 77);
+                ajouterProduit(selec->suivant, nom2, 12, 77);*/
 
-
-                // VOIR BOUCLE free
-                //free(designation);
-                //free(nomRayon);
             }
 
                 break;
@@ -255,12 +193,11 @@ int main()
             }
                 break;
 
-            case 'q' :
-                printf("\n======== PROGRAMME TERMINE ========\n");
+            case 'q' : {
                 T_Rayon *selec = magasin->liste_rayons;
                 char *tmp;
 
-                while (selec != NULL){
+                while (selec != NULL) {
                     tmp = selec->nom_rayon;
                     selec = selec->suivant;
                     supprimerRayon(magasin, tmp);
@@ -268,6 +205,9 @@ int main()
                 free(magasin);
                 printf("Magasin supprime !");
                 test = 0;
+                printf("\n======== PROGRAMME TERMINE ========\n");
+
+            }
                 break;
 
             default :

@@ -1,6 +1,6 @@
 #ifndef TP3_H_INCLUDED
 #define TP3_H_INCLUDED
-#define MAX 40 //Maximum de caractères pour un nom
+#define MAX 70 //Maximum de caractères pour un nom
 
 // Structures et types
 struct Produit {

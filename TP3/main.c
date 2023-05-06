@@ -122,12 +122,12 @@ int main()
             case '3' :
             {
                 // VOIR RAYON NEXISTE PAS
-                float prix = 7;
-                int quantite = 8;
+                float prix;
+                int quantite;
                 char nomRayon[MAX];
                 char designation[MAX];
 
-                printf("Quel est le nom du rayon ?");
+                /*printf("Quel est le nom du rayon ?");
                 scanf("%s", nomRayon);
                 viderBuffer();
 
@@ -153,11 +153,13 @@ int main()
                 if (selec == NULL){
                     printf("ERREUR le rayon n'existe pas.");
                     break;
-                }
-
+                }*/
+                T_Rayon *selec = magasin->liste_rayons;
                 char nom2[] = "clem";
-                ajouterProduit(selec, designation, prix, quantite);
+                //ajouterProduit(selec, designation, prix, quantite);
                 ajouterProduit(selec, nom2, 12, 77);
+                ajouterProduit(selec->suivant, nom2, 12, 77);
+
 
                 // VOIR BOUCLE free
                 //free(designation);
@@ -264,6 +266,7 @@ int main()
                     supprimerRayon(magasin, tmp);
                 }
                 free(magasin);
+                printf("Magasin supprime !");
                 test = 0;
                 break;
 

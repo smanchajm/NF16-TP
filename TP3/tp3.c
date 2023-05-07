@@ -437,7 +437,7 @@ void rechercheProduits(T_Magasin *magasin, float prix_min, float prix_max){
     while(actuel_rayon != NULL) {
         T_Produit *produit_actuel = actuel_rayon->liste_produits;
         while (produit_actuel != NULL) {
-            if (produit_actuel->prix >= prix_min && produit_actuel->prix =< prix_max) {
+            if (produit_actuel->prix >= prix_min && produit_actuel->prix <= prix_max) {
                 // Si le produit appartient Ã  l'intervalle de prix, on l'ajoute Ã  notre nouvelle liste CLASSE.
                 ajouterProduitClasse(&head, produit_actuel->designation, produit_actuel->prix,
                                      produit_actuel->quantite_en_stock, actuel_rayon);

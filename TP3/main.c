@@ -49,20 +49,18 @@ int main()
 
             case '2' :
             {
-                char nomRayon[MAX] /*= "fruit"*/;
+                char nomRayon[MAX];
                 printf("Quel est le nom du rayon ?");
                 fgets(nomRayon, 100, stdin);
                 nomRayon[strcspn(nomRayon, "\n")] = 0;
 
-                //char nomRayon2[MAX]= "legume";
                 ajouterRayon(magasin, nomRayon);
-                //ajouterRayon(magasin, nomRayon2);
+
             }
                 break;
 
             case '3' :
             {
-                // VOIR RAYON NEXISTE PAS
                 float prix;
                 int quantite;
                 char nomRayon[MAX];
@@ -97,11 +95,6 @@ int main()
                 }
 
                 ajouterProduit(selec, designation, prix, quantite);
-                /*T_Rayon *selec = magasin->liste_rayons;
-                char nom2[] = "clem";
-                ajouterProduit(selec, nom2, 12, 77);
-                ajouterProduit(selec->suivant, nom2, 12, 77);*/
-
             }
 
                 break;
@@ -215,6 +208,5 @@ int main()
         }
         printf("\n\n\n");
     }
-
     return 0;
 }

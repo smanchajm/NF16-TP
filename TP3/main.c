@@ -6,6 +6,10 @@
 int main()
 {
 
+}
+
+
+/*
     T_Magasin *magasin = NULL;
 
     // ============= MENU UTILISATEUR =============
@@ -209,4 +213,4 @@ int main()
         printf("\n\n\n");
     }
     return 0;
-}
+}*/

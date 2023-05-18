@@ -25,11 +25,22 @@ struct Noeud {
 typedef struct Noeud T_Noeud;
 
 struct Index {
-    T_Noeud racine;
+    T_Noeud *racine;
     int nbMotsDistincts;
     int nbMotsTotal;
 };
 typedef struct Index T_Index;
+
+// Création et initialisation des structures
+T_Position *creerPosition(int numeroLigne, int ordre, int numeroPhrase);
+T_Noeud *creerNoeud(char *mot, int nbOccurences);
+T_Index *creerIndex();
+
+int comparaison(int ligne1, int ordre1, int ligne2, int ordre2);
+
+// Ajout d'une position dans une liste de position
+T_Position *ajouterPosition(T_Position *listeP, int ligne, int ordre, int phrase);
+
 
 
 #endif //NF16_P23_2_TP4_H

@@ -37,9 +37,14 @@ T_Noeud *creerNoeud(char *mot, int nbOccurences);
 T_Index *creerIndex();
 
 int comparaison(int ligne1, int ordre1, int ligne2, int ordre2);
+char* majuscule(char* chaine);
 
 // Ajout d'une position dans une liste de position
 T_Position *ajouterPosition(T_Position *listeP, int ligne, int ordre, int phrase);
+
+// Ajout d'une occurence dans l'arbre (ajout d'un noeud)
+int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase);
+
 
 
 

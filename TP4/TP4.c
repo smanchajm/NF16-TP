@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "TP4.h"
 
 /* **********************************
@@ -73,6 +74,17 @@ int comparaison(int ligne1, int ordre1, int ligne2, int ordre2){
     return 2;
 }
 
+char* majuscule(char* chaine) {
+    int longueur = strlen(chaine);
+    char* nouvelleChaine = (char*)malloc((longueur + 1) * sizeof(char));
+    int i;
+    for (i = 0; i < longueur; i++) {
+        nouvelleChaine[i] = toupper(chaine[i]);
+    }
+    nouvelleChaine[i] = '\0'; // Ajoute le caractère de fin de chaîne
+    return nouvelleChaine;
+}
+
 /* ********************************
  * Ajout d'une position dans une liste de positions
  ******************************** */
@@ -85,7 +97,7 @@ T_Position *ajouterPosition(T_Position *listeP, int ligne, int ordre, int phrase
 
 
     if((listeP != NULL) && (listeP->numeroLigne == ligne) && (listeP->ordre == ordre) && (listeP->numeroPhrase == phrase)){
-        printf("Impossible. La postition est deja renseignee.\n");
+        printf("Impossible. La position est deja renseignee.\n");
         return 0;
     }
 
@@ -122,3 +134,53 @@ T_Position *ajouterPosition(T_Position *listeP, int ligne, int ordre, int phrase
     return listeP;
 }
 
+/* ********************************
+ * Ajout d'une Occurence d'un mot dans l'arbre
+ ******************************** */
+int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase){
+    char *motMaj = majuscule(mot);
+
+    if(index->racine == NULL){
+        // REVOIR LISTEPOS
+        index->racine->listePositions = ajouterPosition(NULL, ligne, ordre, phrase);
+        return 1;
+    }
+
+    T_Noeud *noeudPere = NULL;
+    T_Noeud *noeudSelec = index->racine;
+
+    while ((noeudSelec != NULL)){
+        int comp = (strcmp(majuscule(noeudSelec->mot), motMaj)!= 0);
+        if(comp == 0){
+            printf("Il existe deja une occurence de ce mot.\n");
+            break;
+        }
+        noeudPere = noeudSelec;
+
+        if(comp < 0){
+            noeudSelec = noeudSelec->filsGauche;
+        } else{
+            noeudSelec = noeudSelec->fildDroit;
+        }
+    }
+
+    if (strcmp(majuscule(noeudSelec->mot), motMaj) == 0){
+        T_Position *listePos = ajouterPosition(noeudSelec->listePositions, ligne, ordre, phrase);
+        if(listePos == NULL){
+            printf("Impossible l'occurence de ce mot est deja renseignee.\n");
+            return 0;
+        }
+    }
+
+
+    if(strcmp(motMaj, majuscule(noeudPere->mot)) < 0){
+        noeudPere->filsGauche = creerNoeud(mot, 0);
+        noeudPere->filsGauche->listePositions = ajouterPosition(noeudPere->filsGauche->listePositions, ligne, ordre, phrase);
+    } else{
+        noeudPere->fildDroit = creerNoeud(mot, 0);
+        noeudPere->fildDroit->listePositions = ajouterPosition(noeudPere->fildDroit->listePositions, ligne, ordre, phrase);
+    }
+
+
+    return 1;
+}

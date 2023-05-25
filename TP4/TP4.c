@@ -162,6 +162,7 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
         noeudPere->filsDroit->listePositions = ajouterPosition(noeudPere->filsDroit->listePositions, ligne, ordre, phrase);
     }
 
-
-    return 1;
+    return 2;
 }
+
+//QUHFGDIUQHDG

@@ -162,7 +162,6 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
         noeudPere->filsDroit->listePositions = ajouterPosition(noeudPere->filsDroit->listePositions, ligne, ordre, phrase);
     }
 
-
     return 1;
 }
 
@@ -178,4 +177,44 @@ int indexerFichier(T_Index *index, char *filename){
     char  ligne[LONGLIGNE];
 
 
+}
+
+T_Noeud* rechercherMot(T_Index* index, char* mot){
+    int hauteur_index = 0;
+
+    if (index == NULL){
+        return 0;
+    }
+    if (strcasecmp(index->racine->mot, mot) == 0){
+        printf("Mot trouvé à la hauteur %d", hauteur_index);
+        return index->racine;
+    }
+
+    T_Noeud* current = index->racine;
+
+    while(current != NULL){
+        if (strcasecmp(current->mot, mot) == 0){
+            printf("Mot trouvé à la hauteur %d", hauteur_index);
+            return current;
+        }
+        else if (strcasecmp(current->mot, mot) < 0) {
+            if (current->filsGauche != NULL) {
+                current = current->filsGauche;
+            }
+            else {
+                printf("Non trouvé, le mot n'existe pas");
+                return 0;
+            }
+        }
+        else {
+            if (current->filsDroit != NULL) {
+                current = current->filsDroit;
+            }
+            else {
+                printf("Non trouvé, le mot n'existe pas");
+                return 0;
+            }
+        }
+        hauteur_index ++;
+    }
 }

@@ -74,17 +74,6 @@ int comparaison(int ligne1, int ordre1, int ligne2, int ordre2){
     return 2;
 }
 
-char* majuscule(char* chaine) {
-    int longueur = strlen(chaine);
-    char* nouvelleChaine = (char*)malloc((longueur + 1) * sizeof(char));
-    int i;
-    for (i = 0; i < longueur; i++) {
-        nouvelleChaine[i] = toupper(chaine[i]);
-    }
-    nouvelleChaine[i] = '\0'; // Ajoute le caractère de fin de chaîne
-    return nouvelleChaine;
-}
-
 /* ********************************
  * Ajout d'une position dans une liste de positions
  ******************************** */
@@ -95,7 +84,7 @@ T_Position *ajouterPosition(T_Position *listeP, int ligne, int ordre, int phrase
         return 0;
     }
 
-
+    // Première comparaison pour la tête
     if((listeP != NULL) && (listeP->numeroLigne == ligne) && (listeP->ordre == ordre) && (listeP->numeroPhrase == phrase)){
         printf("Impossible. La position est deja renseignee.\n");
         return 0;
@@ -121,7 +110,7 @@ T_Position *ajouterPosition(T_Position *listeP, int ligne, int ordre, int phrase
     }
 
     // Si la position existe deja, alors le mot est deja rentre
-    if(posSelecSuivant != NULL && (comparaison(ligne, ordre, posSelecSuivant->numeroLigne, posSelecSuivant->ordre)== 0)){
+    if(posSelecSuivant != NULL && (comparaison(ligne, ordre, posSelecSuivant->numeroLigne, posSelecSuivant->ordre) == 0)){
         printf("Impossible l'occurence de ce mot est deja rentre.\n");
         return NULL;
     }
@@ -130,7 +119,7 @@ T_Position *ajouterPosition(T_Position *listeP, int ligne, int ordre, int phrase
     T_Position *nouvellePosition = creerPosition(ligne, ordre, phrase);
     nouvellePosition->suivant = posSelecSuivant;
     posSelec->suivant = nouvellePosition;
-    printf("Nouvelle position ajoutee avec succes !\n");
+    printf("Nouvelle position ajoutée avec succes !\n");
     return listeP;
 }
 
@@ -138,7 +127,6 @@ T_Position *ajouterPosition(T_Position *listeP, int ligne, int ordre, int phrase
  * Ajout d'une Occurence d'un mot dans l'arbre
  ******************************** */
 int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase){
-    char *motMaj = majuscule(mot);
 
     if(index->racine == NULL){
         // REVOIR LISTEPOS
@@ -150,21 +138,20 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
     T_Noeud *noeudSelec = index->racine;
 
     while ((noeudSelec != NULL)){
-        int comp = (strcmp(majuscule(noeudSelec->mot), motMaj)!= 0);
-        if(comp == 0){
+        if(strcasecmp(noeudSelec->mot, mot) == 0){
             printf("Il existe deja une occurence de ce mot.\n");
             break;
         }
         noeudPere = noeudSelec;
 
-        if(comp < 0){
+        if(strcasecmp(noeudSelec->mot, mot) < 0){
             noeudSelec = noeudSelec->filsGauche;
         } else{
             noeudSelec = noeudSelec->fildDroit;
         }
     }
 
-    if (strcmp(majuscule(noeudSelec->mot), motMaj) == 0){
+    if (strcasecmp(noeudSelec->mot, mot) == 0){
         T_Position *listePos = ajouterPosition(noeudSelec->listePositions, ligne, ordre, phrase);
         if(listePos == NULL){
             printf("Impossible l'occurence de ce mot est deja renseignee.\n");
@@ -173,7 +160,7 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
     }
 
 
-    if(strcmp(motMaj, majuscule(noeudPere->mot)) < 0){
+    if(strcasecmp(noeudSelec->mot, mot) < 0){
         noeudPere->filsGauche = creerNoeud(mot, 0);
         noeudPere->filsGauche->listePositions = ajouterPosition(noeudPere->filsGauche->listePositions, ligne, ordre, phrase);
     } else{

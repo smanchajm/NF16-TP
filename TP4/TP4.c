@@ -139,8 +139,11 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
 
     while ((noeudSelec != NULL)){
         if(strcasecmp(noeudSelec->mot, mot) == 0){
-            printf("Il existe deja une occurence de ce mot.\n");
-            break;
+            T_Position *listePos = ajouterPosition(noeudSelec->listePositions, ligne, ordre, phrase);
+            if(listePos == NULL){
+                printf("Impossible l'occurence de ce mot est deja renseignee.\n");
+                return 0;
+            }
         }
         noeudPere = noeudSelec;
 
@@ -150,15 +153,6 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
             noeudSelec = noeudSelec->filsDroit;
         }
     }
-
-    if (strcasecmp(noeudSelec->mot, mot) == 0){
-        T_Position *listePos = ajouterPosition(noeudSelec->listePositions, ligne, ordre, phrase);
-        if(listePos == NULL){
-            printf("Impossible l'occurence de ce mot est deja renseignee.\n");
-            return 0;
-        }
-    }
-
 
     if(strcasecmp(noeudSelec->mot, mot) < 0){
         noeudPere->filsGauche = creerNoeud(mot, 0);

@@ -20,7 +20,7 @@ struct Noeud {
     int nbOccurences;
     T_Position  *listePositions;
     struct Noeud *filsGauche;
-    struct Noeud *fildDroit;
+    struct Noeud *filsDroit;
 };
 typedef struct Noeud T_Noeud;
 

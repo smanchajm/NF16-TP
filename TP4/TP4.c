@@ -36,7 +36,7 @@ T_Noeud *creerNoeud(char *mot, int nbOccurences){
         nouveauNoeud->nbOccurences = nbOccurences;
         nouveauNoeud->listePositions = NULL;
         nouveauNoeud->filsGauche = NULL;
-        nouveauNoeud->fildDroit = NULL;
+        nouveauNoeud->filsDroit = NULL;
     }
 
     return nouveauNoeud;
@@ -139,33 +139,27 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
 
     while ((noeudSelec != NULL)){
         if(strcasecmp(noeudSelec->mot, mot) == 0){
-            printf("Il existe deja une occurence de ce mot.\n");
-            break;
+            T_Position *listePos = ajouterPosition(noeudSelec->listePositions, ligne, ordre, phrase);
+            if(listePos == NULL){
+                printf("Impossible l'occurence de ce mot est deja renseignee.\n");
+                return 0;
+            }
         }
         noeudPere = noeudSelec;
 
         if(strcasecmp(noeudSelec->mot, mot) < 0){
             noeudSelec = noeudSelec->filsGauche;
         } else{
-            noeudSelec = noeudSelec->fildDroit;
+            noeudSelec = noeudSelec->filsDroit;
         }
     }
-
-    if (strcasecmp(noeudSelec->mot, mot) == 0){
-        T_Position *listePos = ajouterPosition(noeudSelec->listePositions, ligne, ordre, phrase);
-        if(listePos == NULL){
-            printf("Impossible l'occurence de ce mot est deja renseignee.\n");
-            return 0;
-        }
-    }
-
 
     if(strcasecmp(noeudSelec->mot, mot) < 0){
         noeudPere->filsGauche = creerNoeud(mot, 0);
         noeudPere->filsGauche->listePositions = ajouterPosition(noeudPere->filsGauche->listePositions, ligne, ordre, phrase);
     } else{
-        noeudPere->fildDroit = creerNoeud(mot, 0);
-        noeudPere->fildDroit->listePositions = ajouterPosition(noeudPere->fildDroit->listePositions, ligne, ordre, phrase);
+        noeudPere->filsDroit = creerNoeud(mot, 0);
+        noeudPere->filsDroit->listePositions = ajouterPosition(noeudPere->filsDroit->listePositions, ligne, ordre, phrase);
     }
 
 

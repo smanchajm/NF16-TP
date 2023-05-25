@@ -162,7 +162,20 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
         noeudPere->filsDroit->listePositions = ajouterPosition(noeudPere->filsDroit->listePositions, ligne, ordre, phrase);
     }
 
-    return 2;
+
+    return 1;
 }
 
-//QUHFGDIUQHDG
+
+
+/* ********************************
+ * Indexation du fichier
+ ******************************** */
+int indexerFichier(T_Index *index, char *filename){
+
+    FILE *fichier = NULL;
+    fichier = fopen(filename, "r");
+    char  ligne[LONGLIGNE];
+
+
+}

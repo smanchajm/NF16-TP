@@ -5,6 +5,7 @@
 #ifndef NF16_P23_2_TP4_H
 #define NF16_P23_2_TP4_H
 #define MAX 70 //Maximum de caractères pour un nom
+#define LONGLIGNE 100
 
 // Structures et types
 struct Position {
@@ -44,6 +45,8 @@ T_Position *ajouterPosition(T_Position *listeP, int ligne, int ordre, int phrase
 
 // Ajout d'une occurence dans l'arbre (ajout d'un noeud)
 int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase);
+
+int indexerFichier(T_Index *index, char *filename);
 
 
 

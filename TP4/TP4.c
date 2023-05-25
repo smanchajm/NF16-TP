@@ -171,3 +171,17 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
 
     return 1;
 }
+
+
+
+/* ********************************
+ * Indexation du fichier
+ ******************************** */
+int indexerFichier(T_Index *index, char *filename){
+
+    FILE *fichier = NULL;
+    fichier = fopen(filename, "r");
+    char  ligne[LONGLIGNE];
+
+
+}

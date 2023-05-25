@@ -172,10 +172,30 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
  * Indexation du fichier
  ******************************** */
 int indexerFichier(T_Index *index, char *filename){
+    // Initialisation des compteurs pour ajouter les occurences aux bonnes positions
+    int cmptMot = 0, cmptPhrase = 0, cmptOrdre = 0, cmptLigne = 0;
 
     FILE *fichier = NULL;
+    // Ouverture du fichier
     fichier = fopen(filename, "r");
     char  ligne[LONGLIGNE];
+
+    if (fichier == NULL) {
+        printf("Impossible d'ouvrir le fichier.\n");
+        return 0;
+    }
+
+    // Parcours de toutes les lignes du fichier
+    while (fgets(ligne, LONGLIGNE, fichier) != NULL) {
+        // Il faut donc récup le mot sa ligne son ordre et sa phrase
+        char mot[MAX];
+        char charSel;
+
+
+    }
+
+    fclose(fichier);
+    return 1;
 
 
 }

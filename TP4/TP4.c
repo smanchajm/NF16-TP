@@ -79,15 +79,15 @@ int comparaison(int ligne1, int ordre1, int ligne2, int ordre2){
  ******************************** */
 
 T_Position *ajouterPosition(T_Position *listeP, int ligne, int ordre, int phrase){
-    if((ligne <= 0) || (ordre <= 0) || (phrase <= 0)){
+    if((ligne < 0) || (ordre < 0) || (phrase < 0)){
         printf("Impossible. Les informations sont erronees. \n");
-        return 0;
+        return NULL;
     }
 
     // Première comparaison pour la tête
     if((listeP != NULL) && (listeP->numeroLigne == ligne) && (listeP->ordre == ordre) && (listeP->numeroPhrase == phrase)){
         printf("Impossible. La position est deja renseignee.\n");
-        return 0;
+        return NULL;
     }
 
     // Insertion de la position en tête de liste
@@ -97,6 +97,7 @@ T_Position *ajouterPosition(T_Position *listeP, int ligne, int ordre, int phrase
         T_Position *tmp = listeP;
         nouvellePosition->suivant = tmp;
         printf("Insertion du mot en tete de liste.\n");
+        printf("3");
         return nouvellePosition;
     }
 
@@ -130,7 +131,10 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
 
     if(index->racine == NULL){
         // REVOIR LISTEPOS
-        index->racine->listePositions = ajouterPosition(NULL, ligne, ordre, phrase);
+        printf("1");
+        index->racine = creerNoeud(mot, 0);
+        index->racine->listePositions = ajouterPosition(index->racine->listePositions, ligne, ordre, phrase);
+        printf("2");
         return 1;
     }
 
@@ -138,6 +142,7 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
     T_Noeud *noeudSelec = index->racine;
 
     while ((noeudSelec != NULL)){
+        printf("5");
         if(strcasecmp(noeudSelec->mot, mot) == 0){
             T_Position *listePos = ajouterPosition(noeudSelec->listePositions, ligne, ordre, phrase);
             if(listePos == NULL){
@@ -149,12 +154,14 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
 
         if(strcasecmp(noeudSelec->mot, mot) < 0){
             noeudSelec = noeudSelec->filsGauche;
+            printf("G");
         } else{
+            printf("D");
             noeudSelec = noeudSelec->filsDroit;
         }
     }
 
-    if(strcasecmp(noeudSelec->mot, mot) < 0){
+    if(strcasecmp(noeudPere->mot, mot) < 0){
         noeudPere->filsGauche = creerNoeud(mot, 0);
         noeudPere->filsGauche->listePositions = ajouterPosition(noeudPere->filsGauche->listePositions, ligne, ordre, phrase);
     } else{
@@ -187,17 +194,49 @@ int indexerFichier(T_Index *index, char *filename){
     // Parcours de toutes les lignes du fichier
     while (fgets(ligne, LONGLIGNE, fichier) != NULL) {
         // Il faut donc récup le mot sa ligne son ordre et sa phrase
+        int j = 0;
+        cmptOrdre++;
         char mot[MAX];
         char charSel;
 
+        // Récupération de tous les caractères d'un mot
+        for (int i = 0; i < strlen(ligne); ++i) {
+            charSel = ligne[i];
 
+            if ((charSel != '\n') && (charSel != '.') && (charSel != ' ')) { // Ce n'est pas la fin du mot
+                mot[j] = charSel;
+                j++;
+            } else{ // C'est la fin d'un mot
+                if (strlen(mot) != 0){
+                    // On ajoute le mot à l'ABR
+                    printf("\n%s\n", mot);
+                    ajouterOccurence(index, mot, cmptLigne, cmptOrdre, cmptPhrase);
+                    printf("4");
+                    cmptMot++;
+                }
+                cmptOrdre++;
+                for (j = 0; j < MAX; j++) {
+                    mot[j] = '\0';
+                }
+                j = 0;
+            }
+            // Si on lit un point alors on incrémente le nb de phrases
+            if (charSel == '.'){
+                cmptPhrase++;
+            }
+        }
+        cmptLigne++;
+        cmptOrdre = 0;
     }
-
+    // Fermeture du fichier
     fclose(fichier);
-    return 1;
-
-
+    return cmptMot;
 }
+
+
+/* ********************************
+ * Recherche d'un mot
+ ******************************** */
 
 T_Noeud* rechercherMot(T_Index* index, char* mot){
     int hauteur_index = 0;

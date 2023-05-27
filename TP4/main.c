@@ -9,12 +9,9 @@
 
 int main()
 {
-    T_Position *listePos = NULL;
-    listePos = ajouterPosition(listePos, 2, 5, 4);
-    listePos = ajouterPosition(listePos, 2, 7, 4);
-    listePos = ajouterPosition(listePos, 2, 2, 4);
-    listePos = ajouterPosition(listePos, 2, 6, 4);
-
+    T_Index *ABR = creerIndex();
+    char *filename = "../TP4/test.txt";
+    indexerFichier(ABR, filename);
 
 }
 

@@ -59,6 +59,50 @@ T_Index *creerIndex(){
     return nouveauIndex;
 }
 
+
+/* **********************************
+ * Création et initialisation des structures listes
+ ********************************** */
+
+
+T_Mot *creerMot(char *nom){
+    T_Mot *nouveauMot = NULL;
+    nouveauMot = malloc(sizeof(T_Mot));
+
+    if (nouveauMot){
+        nouveauMot->suivant = NULL;
+        nouveauMot->mot = malloc(strlen(nom) + 1);
+        strcpy(nouveauMot->mot,nom);
+    }
+
+    return nouveauMot;
+}
+
+T_Phrase *creerPhrase(){
+    T_Phrase *nouvellePhrase = NULL;
+    nouvellePhrase = malloc(sizeof(T_Phrase));
+
+    if (nouvellePhrase){
+        nouvellePhrase->listeMot = NULL;
+        nouvellePhrase->suivant = NULL;
+        nouvellePhrase->nbMots = 0;
+    }
+
+    return nouvellePhrase;
+}
+
+T_listePhrases *creerIndexPhrases(){
+    T_listePhrases *nouveauIndexPhrases = NULL;
+    nouveauIndexPhrases = malloc((sizeof (T_listePhrases)));
+    if (nouveauIndexPhrases){
+        nouveauIndexPhrases->nbLignes = 0;
+        nouveauIndexPhrases->listePhrase = NULL;
+    }
+
+    return nouveauIndexPhrases;
+}
+
+// Fonction permettant de comparer deux mots en fonction de leurs positions
 int comparaison(int ligne1, int ordre1, int ligne2, int ordre2){
     if(ligne1 == ligne2){
         if(ordre1 == ordre2){
@@ -134,6 +178,7 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
         printf("1");
         index->racine = creerNoeud(mot, 0);
         index->racine->listePositions = ajouterPosition(index->racine->listePositions, ligne, ordre, phrase);
+        index->racine->nbOccurences ++;
         printf("2");
         return 1;
     }
@@ -149,6 +194,8 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
                 printf("Impossible l'occurence de ce mot est deja renseignee.\n");
                 return 0;
             }
+            noeudSelec->nbOccurences++;
+            return 1;
         }
         noeudPere = noeudSelec;
 
@@ -164,9 +211,11 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
     if(strcasecmp(noeudPere->mot, mot) < 0){
         noeudPere->filsGauche = creerNoeud(mot, 0);
         noeudPere->filsGauche->listePositions = ajouterPosition(noeudPere->filsGauche->listePositions, ligne, ordre, phrase);
+        noeudPere->filsGauche->nbOccurences++;
     } else{
         noeudPere->filsDroit = creerNoeud(mot, 0);
         noeudPere->filsDroit->listePositions = ajouterPosition(noeudPere->filsDroit->listePositions, ligne, ordre, phrase);
+        noeudPere->filsDroit->nbOccurences++;
     }
 
     return 1;
@@ -177,6 +226,7 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
 /* ********************************
  * Indexation du fichier
  ******************************** */
+// attention doit se finir par un point ou un saut de ligne
 int indexerFichier(T_Index *index, char *filename){
     // Initialisation des compteurs pour ajouter les occurences aux bonnes positions
     int cmptMot = 0, cmptPhrase = 0, cmptOrdre = 0, cmptLigne = 0;
@@ -276,4 +326,46 @@ T_Noeud* rechercherMot(T_Index* index, char* mot){
         }
         hauteur_index ++;
     }
+}
+
+/* ********************************
+ * Construction du texte
+ ******************************** */
+int parcoursABR(T_Noeud *noeud) {
+    if (noeud != NULL) {
+        printf("Mot: %s, Occurrences: %d\n", noeud->mot, noeud->nbOccurences);
+        T_Position *posSelec = noeud->listePositions;
+        while (posSelec){
+            // Insertion dans une double liste chaînée -> trouver si la phrase existe et soit la créer, soit juste ajouter le mot
+
+
+
+
+            posSelec = posSelec->suivant;
+        }
+
+        parcoursABR(noeud->filsDroit);
+        parcoursABR(noeud->filsGauche);
+    }
+}
+void indexerListe(T_Index *index){
+    // Parcourir tous les éléments de l'ABR et toutes les positions
+    // Les ajouter à la liste chainée de phrases en fonction du numéro de la phrase et de l'ordre
+    if (index->racine == NULL){
+        printf("Attention l'index est nul");
+        return;
+    }
+    parcoursABR(index->racine);
+
+
+
+}
+
+
+void construireTexte(T_Index index, char *filename){
+    // 1. Indexer les nouvelles structures
+    // 2. Creer un nouveau fichier et l'ouvrir
+    // 3. Ecrire chaque mot dans un fichier
+
+
 }

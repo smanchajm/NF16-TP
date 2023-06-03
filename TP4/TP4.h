@@ -32,6 +32,30 @@ struct Index {
 };
 typedef struct Index T_Index;
 
+// Structures particulières pour les questions 6 et 7
+
+struct Mot {
+    char *mot;
+    struct Mot *suivant;
+};
+typedef struct Mot T_Mot;
+
+struct Phrase {
+    struct Mot *listeMot;
+    struct Phrase *suivant;
+    int nbMots;
+};
+typedef struct Phrase T_Phrase;
+
+struct listePhrases {
+    struct Phrase *listePhrase;
+    int nbLignes;
+
+};
+typedef struct listePhrases T_listePhrases;
+
+
+
 // Création et initialisation des structures
 T_Position *creerPosition(int numeroLigne, int ordre, int numeroPhrase);
 T_Noeud *creerNoeud(char *mot, int nbOccurences);
@@ -47,6 +71,13 @@ T_Position *ajouterPosition(T_Position *listeP, int ligne, int ordre, int phrase
 int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase);
 
 int indexerFichier(T_Index *index, char *filename);
+
+void construireTexte(T_Index index, char *filename);
+
+int parcoursABR(T_Noeud *noeud);
+
+void indexerListe(T_Index *index);
+
 
 
 

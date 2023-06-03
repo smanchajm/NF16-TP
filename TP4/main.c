@@ -12,6 +12,9 @@ int main()
     T_Index *ABR = creerIndex();
     char *filename = "../TP4/test.txt";
     indexerFichier(ABR, filename);
+    printf("\n\n\n");
+    indexerListe(ABR);
+    free(ABR);
 
 }
 

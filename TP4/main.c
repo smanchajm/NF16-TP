@@ -14,13 +14,16 @@ int main()
     printf("\n\n\n");
     T_listePhrases *index = indexerListe(ABR);
 
-    //afficherTexte(index);
 
-    //afficherPos(ABR);
     //afficher_arbre(ABR->racine, 0);
     //afficherMagasin(liste);
     //afficherIndex(*ABR);
-    rechercherMot(ABR,"arbre");
+    afficherPos(ABR);
+
+
+    afficherTexte(index);
+
+    //afficherOccurencesMot(ABR, "oui");
     free(ABR);
 
 }

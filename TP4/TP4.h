@@ -98,6 +98,8 @@ int parcoursABRSam(T_Noeud *noeud, T_listePhrases * liste);
 
 T_listePhrases *indexerListe(T_Index *index);
 
+void afficherOccurencesMot(T_Index *index, char *mot);
+
 void afficher_arbre(T_Noeud *racine, int prof);
 
 int ajouterPhraseMot(T_listePhrases *index, char *mot, int numPhrase, int ordre, int ligne);

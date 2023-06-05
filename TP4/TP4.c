@@ -243,20 +243,22 @@ int indexerFichier(T_Index *index, char *filename){
         printf("Impossible d'ouvrir le fichier.\n");
         return 0;
     }
+    char mot[MAX];
+    //strcpy(mot, "");
+    memset(mot, 0, sizeof(mot));
+
 
     // Parcours de toutes les lignes du fichier
     while (fgets(ligne, LONGLIGNE, fichier) != NULL) {
         // Il faut donc récup le mot sa ligne son ordre et sa phrase
         int j = 0;
-        cmptOrdre++;
-        char mot[MAX];
-        for (int v = 0; v < MAX; v++) {
-            mot[v] = '\0';
-        }
         char charSel;
+        cmptOrdre = 1;
+
 
         // Récupération de tous les caractères d'un mot
         for (int i = 0; i < strlen(ligne); ++i) {
+            charSel = '\0';
             charSel = ligne[i];
 
             if ((charSel != '\n') && (charSel != '.') && (charSel != ' ') && (charSel != EOF)) { // Ce n'est pas la fin du mot
@@ -267,22 +269,19 @@ int indexerFichier(T_Index *index, char *filename){
                     // On ajoute le mot à l'ABR
                     printf("\n%s\n", mot);
                     ajouterOccurence(index, mot, cmptLigne, cmptOrdre, cmptPhrase);
-                    printf("4");
                     cmptMot++;
                 }
                 cmptOrdre++;
-                for (j = 0; j < MAX; j++) {
-                    mot[j] = '\0';
-                }
+                memset(mot, 0, sizeof(mot));
                 j = 0;
             }
             // Si on lit un point alors on incrémente le nb de phrases
             if (charSel == '.'){
                 cmptPhrase++;
+                cmptOrdre--;
             }
         }
         cmptLigne++;
-        cmptOrdre = 0;
     }
     // Fermeture du fichier
     fclose(fichier);
@@ -333,7 +332,7 @@ T_Noeud* rechercherMot(T_Index* index, char* mot) {
         return NULL;
     }
     if (strcasecmp(index->racine->mot, mot) == 0) {
-        printf("Mot trouvé à la hauteur %d", hauteur_index);
+        printf("Mot trouve a la hauteur %d", hauteur_index);
         return index->racine;
     }
 
@@ -343,7 +342,7 @@ T_Noeud* rechercherMot(T_Index* index, char* mot) {
         printf("%s \n",current->mot);
         printf("%d \n", strcasecmp(current->mot, mot));
         if (strcasecmp(current->mot, mot) == 0) {
-            printf("Mot trouvé à la hauteur %d \n", hauteur_index);
+            printf("Mot trouve e la hauteur %d \n", hauteur_index);
             while(current->listePositions != NULL) {
                 printf("num ligne : %d | ordre : %d | num phrase : %d \n", current->listePositions->numeroLigne, current->listePositions->ordre, current->listePositions->numeroPhrase);
                 current->listePositions = current->listePositions->suivant;
@@ -372,13 +371,24 @@ T_Noeud* rechercherMot(T_Index* index, char* mot) {
 /* ********************************
  * Construction du texte
  ******************************** */
+
 int ajouterMot(T_Phrase *phrase, char *mot, int ordre, int ligne){
     // Insertion du nouveau rayon en tête de liste
     if (( phrase->listeMot != NULL) && (ordre == phrase->listeMot->ordre) && (ligne == phrase->listeMot->ligne)){
         printf("Impossible. Le mot est deja renseignee.\n");
         return 0;
     }
-    if((phrase->listeMot == NULL) || ((ligne < phrase->listeMot->ligne) && ( ordre < phrase->listeMot->ordre ))){
+    if( phrase->listeMot == NULL) {
+        // Si la liste triée est vide, le nouveau mot devient la tête de la liste
+        T_Mot *nouvMot = creerMot(mot,ordre, ligne);
+        T_Mot *tmp = phrase->listeMot;
+        phrase->listeMot = nouvMot;
+        nouvMot->suivant = tmp;
+        return 1; }
+
+        //if (phrase->listeMot == NULL || ordre < phrase->listeMot->ordre || (ordre == phrase->listeMot->ordre && ligne <= phrase->listeMot->ligne)){
+    //if((phrase->listeMot == NULL) || ((ligne < phrase->listeMot->ligne) && ( ordre < phrase->listeMot->ordre ))){
+    if((ligne < phrase->listeMot->ligne || (ligne == phrase->listeMot->ligne && ordre < phrase->listeMot->ordre))){
         T_Mot *nouvMot = creerMot(mot,ordre, ligne);
         T_Mot *tmp = phrase->listeMot;
         phrase->listeMot = nouvMot;
@@ -392,16 +402,21 @@ int ajouterMot(T_Phrase *phrase, char *mot, int ordre, int ligne){
     T_Mot *motSelecSuivant = phrase->listeMot->suivant;
 
     // Permet de trouver la place du nouveau rayon dans l'ordre alphabÃ©tique
-    while (motSelecSuivant != NULL && (ordre > motSelecSuivant->ordre) && (ligne >= motSelecSuivant->ligne || ordre < motSelecSuivant->ordre)) {
+    while ((motSelecSuivant != NULL && (ligne > motSelecSuivant->ligne || (ligne == motSelecSuivant->ligne && ordre > motSelecSuivant->ordre)))){
+    //while (motSelecSuivant != NULL && (ligne > motSelecSuivant->ligne) && (ordre > motSelecSuivant->ordre) ) {
+        if (strcmp(mot, "arbre")==0){
+            printf("motSelec : %s\n", motSelec->mot);
+            printf("lotSelecSuivant : %s\n", motSelecSuivant->mot);
+        }
         motSelec = motSelecSuivant;
         motSelecSuivant = motSelecSuivant->suivant;
     }
 
     // Si le mot existe déjà, on retourne 0
-    /*if (motSelecSuivant != NULL && ordre == motSelecSuivant->ordre) {
+    if (motSelecSuivant != NULL && ordre == motSelecSuivant->ordre) {
         printf("Impossible le mot existe deja\n");
         return 0;
-    }*/
+    }
 
     // Création d'un mot
     T_Mot *nouvMot = creerMot(mot,ordre, ligne);
@@ -418,7 +433,6 @@ int ajouterPhraseMot(T_listePhrases *index, char *mot, int numPhrase, int ordre,
     // Insertion du nouveau rayon en tête de liste
     if (( index->listePhrase != NULL) && (numPhrase == index->listePhrase->indice)){
         ajouterMot(index->listePhrase, mot, ordre, ligne);
-        printf("Ajout du mot dans sa phrase.\n");
         return 1;
     }
     if((index->listePhrase == NULL) || ( numPhrase < index->listePhrase->indice )){
@@ -436,7 +450,7 @@ int ajouterPhraseMot(T_listePhrases *index, char *mot, int numPhrase, int ordre,
     T_Phrase *phraseSelecSuivant = index->listePhrase->suivant;
 
     // Permet de trouver la place du nouveau rayon dans l'ordre alphabÃ©tique -> strcmp
-    while (phraseSelecSuivant != NULL && numPhrase < phraseSelecSuivant->indice) {
+    while (phraseSelecSuivant != NULL && numPhrase > phraseSelecSuivant->indice) {
         phraseSelec = phraseSelecSuivant;
         phraseSelecSuivant = phraseSelecSuivant->suivant;
     }
@@ -488,6 +502,7 @@ T_listePhrases *indexerListe(T_Index *index){
 }
 
 
+
 void construireTexte(T_Index index, char *filename){
     // 1. Indexer les nouvelles structures
     // 2. Creer un nouveau fichier et l'ouvrir
@@ -510,14 +525,64 @@ void afficher_arbre(T_Noeud *racine, int prof){
 }
 
 
+void afficherOccurencesMot(T_Index *index, char *mot) {
+    // on recupere l'adresse du mot et on initialise nos tableaux de position
+    T_Noeud *n = rechercherMot(index, mot);
+    if (n != NULL) {
+        int *tab_phrase = malloc(n->nbOccurences * sizeof(int));
+        int *tab_ordre = malloc(n->nbOccurences * sizeof(int));
+        int *tab_ligne = malloc(n->nbOccurences * sizeof(int));
 
+        // reuperation des positions
+        T_Position *tmp = n->listePositions;
+        for (int i = 0; i < n->nbOccurences; i++) {
+            tab_ordre[i] = tmp->ordre;
+            tab_phrase[i] = tmp->numeroPhrase;
+            tab_ligne[i] = tmp->numeroLigne;
+            tmp = tmp->suivant;
+        }
+
+        // indexation par ordre de phrase :
+        T_listePhrases *listePhrases = malloc(sizeof(T_listePhrases));
+        listePhrases = creerIndexPhrases();
+        listePhrases = indexerListe(index);
+
+        // affichage :
+        printf("\nMot = \"%s\"\n", n->mot);
+        printf("Occurences = %d\n", n->nbOccurences);
+        for (int i = 0; i < n->nbOccurences; i++) {
+            // positionnement dans l'index :
+            T_Phrase *phrase = listePhrases->listePhrase;
+            T_Mot *mot_liste = NULL;
+            for (int j = 1; j < tab_phrase[i]; j++) {
+                phrase = phrase->suivant;
+            }
+
+            printf("| Ligne %d, mot %d :", tab_ligne[i], tab_ordre[i]);
+
+            // affichage de la phrase :
+            mot_liste = phrase->listeMot;
+            for (int k = 0; k < phrase->nbMots; k++) {
+                printf(" %s", mot_liste->mot);
+                mot_liste = mot_liste->suivant;
+            }
+            printf(".\n");
+        }
+        printf("\n");
+
+
+    } else {
+        printf("Le mot n'existe pas dans le texte");
+    }
+    return;
+}
 
 
 
 // UTILITAIRE
 void afficherPos(T_Index *index) {
     printf("\n\n");
-    T_Noeud *noeud = index->racine->filsGauche->filsDroit;
+    T_Noeud *noeud = index->racine->filsGauche;
     T_Position *pos = noeud->listePositions;
     printf("%s, %d\n", noeud->mot, noeud->nbOccurences);
     while (pos){

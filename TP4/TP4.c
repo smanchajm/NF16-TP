@@ -289,20 +289,19 @@ int indexerFichier(T_Index *index, char *filename){
     return cmptMot;
 }
 
-void parcoursABR(T_Noeud* noeud, char lettre){
+void parcours_recherche(T_Noeud* noeud, char lettre){
     T_Noeud* currentpos = noeud;
     if (noeud != NULL){
-        printf("%s \n",noeud->mot);
         if (strncmp(noeud->mot,&lettre,1) == 0){
             printf("%c \n", lettre);
-            printf("| -- %s \n", noeud->mot);
+            printf("|-- %s \n", noeud->mot);
             while(currentpos->listePositions != NULL){
-                printf("| -- l:%d, o:%d, p:%d \n", currentpos->listePositions->numeroLigne, currentpos->nbOccurences, currentpos->listePositions->numeroPhrase);
+                printf("|--- (l:%d, o:%d, p:%d) \n", currentpos->listePositions->numeroLigne, currentpos->listePositions->ordre, currentpos->listePositions->numeroPhrase);
                 currentpos->listePositions = currentpos->listePositions->suivant;
+            }
         }
-        }
-        parcoursABR(noeud->filsGauche, lettre);
-        parcoursABR(noeud->filsDroit, lettre);
+        parcours_recherche(noeud->filsGauche, lettre);
+        parcours_recherche(noeud->filsDroit, lettre);
     }
     else {
         return;
@@ -316,9 +315,9 @@ void afficherIndex(T_Index index){
         printf("L'index est vide\n");
         return;
     }
-    char current_char = 65;
-    while (current_char < 91) {
-        parcoursABR(current, current_char);
+    char current_char = 97;
+    while (current_char < 123) {
+        parcours_recherche(current, current_char);
         current_char ++;
     }
 }
@@ -327,43 +326,44 @@ void afficherIndex(T_Index index){
  * Recherche d'un mot
  ******************************** */
 
-T_Noeud* rechercherMot(T_Index* index, char* mot){
+T_Noeud* rechercherMot(T_Index* index, char* mot) {
     int hauteur_index = 0;
 
-    if (index == NULL){
-        return 0;
+    if (index == NULL) {
+        return NULL;
     }
-    if (strcasecmp(index->racine->mot, mot) == 0){
+    if (strcasecmp(index->racine->mot, mot) == 0) {
         printf("Mot trouvé à la hauteur %d", hauteur_index);
         return index->racine;
     }
 
-    T_Noeud* current = index->racine;
+    T_Noeud *current = index->racine;
 
-    while(current != NULL){
-        if (strcasecmp(current->mot, mot) == 0){
-            printf("Mot trouvé à la hauteur %d", hauteur_index);
+    while (current != NULL) {
+        if (strcasecmp(current->mot, mot) == 0) {
+            printf("Mot trouvé à la hauteur %d \n", hauteur_index);
+            while(current->listePositions != NULL) {
+                printf("num ligne : %d | ordre : %d | num phrase : %d", current->listePositions->numeroLigne, current->listePositions->ordre, current->listePositions->numeroLigne);
+                current->listePositions = current->listePositions->suivant;
+            }
             return current;
-        }
-        else if (strcasecmp(current->mot, mot) < 0) {
+
+        } else if (strcasecmp(current->mot, mot) < 0) {
             if (current->filsGauche != NULL) {
                 current = current->filsGauche;
-            }
-            else {
+            } else {
                 printf("Non trouvé, le mot n'existe pas");
-                return 0;
+                return NULL;
             }
-        }
-        else {
+        } else {
             if (current->filsDroit != NULL) {
                 current = current->filsDroit;
-            }
-            else {
+            } else {
                 printf("Non trouvé, le mot n'existe pas");
-                return 0;
+                return NULL;
             }
         }
-        hauteur_index ++;
+        hauteur_index++;
     }
 }
 

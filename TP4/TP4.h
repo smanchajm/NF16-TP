@@ -64,6 +64,8 @@ typedef struct LectureTexte {
     struct LectureTexte* suivant;
 }T_LectureTexte;
 
+void afficherIndex(T_Index index);
+
 
 
 
@@ -87,7 +89,11 @@ void construireTexte(T_Index index, char *filename);
 
 void afficherIndex(T_Index index);
 
-void parcoursABR(T_Noeud *noeud, char lettre);
+int parcoursABR(T_Noeud *noeud, T_listePhrases * liste);
+
+void parcours_affichage(T_Noeud* noeud, char lettre);
+
+T_Noeud* rechercherMot(T_Index* index, char* character);
 int parcoursABRSam(T_Noeud *noeud, T_listePhrases * liste);
 
 T_listePhrases *indexerListe(T_Index *index);
@@ -99,6 +105,6 @@ int ajouterMot(T_Phrase *phrase, char *mot, int ordre, int ligne);
 void afficherTexte(T_listePhrases *index);
 void afficherPos(T_Index *index);
 
-
+void menu();
 
 #endif //NF16_P23_2_TP4_H

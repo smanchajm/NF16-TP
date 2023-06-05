@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <winsock.h>
 #include "tp3.h"
 
 #include "TP4.h"
@@ -15,11 +14,13 @@ int main()
     printf("\n\n\n");
     T_listePhrases *index = indexerListe(ABR);
 
-    afficherTexte(index);
+    //afficherTexte(index);
 
-    afficherPos(ABR);
+    //afficherPos(ABR);
     //afficher_arbre(ABR->racine, 0);
     //afficherMagasin(liste);
+    afficherIndex(*ABR);
+    rechercherMot(ABR,"arbre");
     free(ABR);
 
 }

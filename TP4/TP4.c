@@ -454,7 +454,7 @@ int ajouterPhraseMot(T_listePhrases *index, char *mot, int numPhrase, int ordre)
 
 
 
-int parcoursABR(T_Noeud *noeud, T_listePhrases * liste) {
+int parcoursABRSam(T_Noeud *noeud, T_listePhrases * liste) {
     if (noeud != NULL) {
         printf("Mot: %s, Occurrences: %d\n", noeud->mot, noeud->nbOccurences);
         T_Position *posSelec = noeud->listePositions;
@@ -463,8 +463,8 @@ int parcoursABR(T_Noeud *noeud, T_listePhrases * liste) {
             ajouterPhraseMot(liste, noeud->mot, posSelec->numeroPhrase, posSelec->ordre);
             posSelec = posSelec->suivant;
         }
-        parcoursABR(noeud->filsDroit, liste);
-        parcoursABR(noeud->filsGauche, liste);
+        parcoursABRSam(noeud->filsDroit, liste);
+        parcoursABRSam(noeud->filsGauche, liste);
     }
 }
 
@@ -477,7 +477,7 @@ T_listePhrases *indexerListe(T_Index *index){
 
     }
     T_listePhrases *liste = creerIndexPhrases();
-    parcoursABR(index->racine, liste);
+    parcoursABRSam(index->racine, liste);
     return liste;
 }
 

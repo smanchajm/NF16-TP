@@ -85,6 +85,7 @@ int indexerFichier(T_Index *index, char *filename);
 void construireTexte(T_Index index, char *filename);
 
 void parcoursABR(T_Noeud *noeud, char lettre);
+int parcoursABRSam(T_Noeud *noeud, T_listePhrases * liste);
 
 T_listePhrases *indexerListe(T_Index *index);
 

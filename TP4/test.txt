@@ -1,2 +1,2 @@
-bh oui oui ci oui mon reuf quoi j'aime
-quoi ah.
+Cet arbre binaire de recherche est un arbre binaire un peu particulier. Cet arbre
+binaire est tres utile.

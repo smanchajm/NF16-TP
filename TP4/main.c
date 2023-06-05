@@ -13,8 +13,11 @@ int main()
     char *filename = "../TP4/test.txt";
     indexerFichier(ABR, filename);
     printf("\n\n\n");
-    indexerListe(ABR);
+    T_listePhrases *index = indexerListe(ABR);
 
+    afficherTexte(index);
+
+    afficherPos(ABR);
     //afficher_arbre(ABR->racine, 0);
     //afficherMagasin(liste);
     free(ABR);

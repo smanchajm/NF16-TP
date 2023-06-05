@@ -38,6 +38,7 @@ struct Mot {
     char *mot;
     struct Mot *suivant;
     int ordre;
+    int ligne;
 };
 typedef struct Mot T_Mot;
 
@@ -84,6 +85,8 @@ int indexerFichier(T_Index *index, char *filename);
 
 void construireTexte(T_Index index, char *filename);
 
+void afficherIndex(T_Index index);
+
 void parcoursABR(T_Noeud *noeud, char lettre);
 int parcoursABRSam(T_Noeud *noeud, T_listePhrases * liste);
 
@@ -91,9 +94,10 @@ T_listePhrases *indexerListe(T_Index *index);
 
 void afficher_arbre(T_Noeud *racine, int prof);
 
-int ajouterPhraseMot(T_listePhrases *index, char *mot, int numPhrase, int ordre);
-int ajouterMot(T_Phrase *phrase, char *mot, int ordre);
-//void afficherMagasin(T_listePhrases index);
+int ajouterPhraseMot(T_listePhrases *index, char *mot, int numPhrase, int ordre, int ligne);
+int ajouterMot(T_Phrase *phrase, char *mot, int ordre, int ligne);
+void afficherTexte(T_listePhrases *index);
+void afficherPos(T_Index *index);
 
 
 

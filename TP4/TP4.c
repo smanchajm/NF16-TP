@@ -65,12 +65,13 @@ T_Index *creerIndex(){
  ********************************** */
 
 
-T_Mot *creerMot(char *nom, int ordre){
+T_Mot *creerMot(char *nom, int ordre, int ligne){
     T_Mot *nouveauMot = NULL;
     nouveauMot = malloc(sizeof(T_Mot));
 
     if (nouveauMot){
         nouveauMot->ordre = ordre;
+        nouveauMot->ligne = ligne;
         nouveauMot->suivant = NULL;
         nouveauMot->mot = malloc(strlen(nom) + 1);
         strcpy(nouveauMot->mot,nom);
@@ -201,7 +202,7 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
         }
         noeudPere = noeudSelec;
 
-        if(strcasecmp(noeudSelec->mot, mot) < 0){
+        if(strcasecmp(noeudSelec->mot, mot) > 0){
             noeudSelec = noeudSelec->filsGauche;
             printf("G");
         } else{
@@ -210,7 +211,7 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
         }
     }
 
-    if(strcasecmp(noeudPere->mot, mot) < 0){
+    if(strcasecmp(noeudPere->mot, mot) > 0){
         noeudPere->filsGauche = creerNoeud(mot, 0);
         noeudPere->filsGauche->listePositions = ajouterPosition(noeudPere->filsGauche->listePositions, ligne, ordre, phrase);
         noeudPere->filsGauche->nbOccurences++;
@@ -249,6 +250,9 @@ int indexerFichier(T_Index *index, char *filename){
         int j = 0;
         cmptOrdre++;
         char mot[MAX];
+        for (int v = 0; v < MAX; v++) {
+            mot[v] = '\0';
+        }
         char charSel;
 
         // Récupération de tous les caractères d'un mot
@@ -366,14 +370,14 @@ T_Noeud* rechercherMot(T_Index* index, char* mot){
 /* ********************************
  * Construction du texte
  ******************************** */
-int ajouterMot(T_Phrase *phrase, char *mot, int ordre){
+int ajouterMot(T_Phrase *phrase, char *mot, int ordre, int ligne){
     // Insertion du nouveau rayon en tête de liste
-    if (( phrase->listeMot != NULL) && (ordre == phrase->listeMot->ordre) ){
+    if (( phrase->listeMot != NULL) && (ordre == phrase->listeMot->ordre) && (ligne == phrase->listeMot->ligne)){
         printf("Impossible. Le mot est deja renseignee.\n");
         return 0;
     }
-    if((phrase->listeMot == NULL) || ( ordre < phrase->listeMot->ordre )){
-        T_Mot *nouvMot = creerMot(mot,ordre);
+    if((phrase->listeMot == NULL) || ((ligne < phrase->listeMot->ligne) && ( ordre < phrase->listeMot->ordre ))){
+        T_Mot *nouvMot = creerMot(mot,ordre, ligne);
         T_Mot *tmp = phrase->listeMot;
         phrase->listeMot = nouvMot;
         nouvMot->suivant = tmp;
@@ -386,19 +390,19 @@ int ajouterMot(T_Phrase *phrase, char *mot, int ordre){
     T_Mot *motSelecSuivant = phrase->listeMot->suivant;
 
     // Permet de trouver la place du nouveau rayon dans l'ordre alphabÃ©tique
-    while (motSelecSuivant != NULL && ordre < motSelecSuivant->ordre) {
+    while (motSelecSuivant != NULL && (ordre > motSelecSuivant->ordre) && (ligne >= motSelecSuivant->ligne || ordre < motSelecSuivant->ordre)) {
         motSelec = motSelecSuivant;
         motSelecSuivant = motSelecSuivant->suivant;
     }
 
     // Si le mot existe déjà, on retourne 0
-    if (motSelecSuivant != NULL && ordre == motSelecSuivant->ordre) {
+    /*if (motSelecSuivant != NULL && ordre == motSelecSuivant->ordre) {
         printf("Impossible le mot existe deja\n");
         return 0;
-    }
+    }*/
 
     // Création d'un mot
-    T_Mot *nouvMot = creerMot(mot,ordre);
+    T_Mot *nouvMot = creerMot(mot,ordre, ligne);
     nouvMot->suivant = motSelecSuivant;
     motSelec->suivant = nouvMot;
     printf("Le mot est ajoute avec succes !\n");
@@ -407,11 +411,11 @@ int ajouterMot(T_Phrase *phrase, char *mot, int ordre){
 }
 
 
-int ajouterPhraseMot(T_listePhrases *index, char *mot, int numPhrase, int ordre) {
+int ajouterPhraseMot(T_listePhrases *index, char *mot, int numPhrase, int ordre, int ligne) {
 
     // Insertion du nouveau rayon en tête de liste
     if (( index->listePhrase != NULL) && (numPhrase == index->listePhrase->indice)){
-        ajouterMot(index->listePhrase, mot, ordre);
+        ajouterMot(index->listePhrase, mot, ordre, ligne);
         printf("Ajout du mot dans sa phrase.\n");
         return 1;
     }
@@ -421,7 +425,7 @@ int ajouterPhraseMot(T_listePhrases *index, char *mot, int numPhrase, int ordre)
         index->listePhrase = nouvPhrase;
         nouvPhrase->suivant = tmp;
         printf("Insertion de la phrase en tete de liste.\n");
-        ajouterMot(index->listePhrase, mot, ordre);
+        ajouterMot(index->listePhrase, mot, ordre, ligne);
         return 1;
     }
 
@@ -435,19 +439,17 @@ int ajouterPhraseMot(T_listePhrases *index, char *mot, int numPhrase, int ordre)
         phraseSelecSuivant = phraseSelecSuivant->suivant;
     }
 
-    // Si le rayon existe déjà, on retourne n'as juste à ajouter le mot dans cette phrase
     if (phraseSelecSuivant != NULL && numPhrase == phraseSelecSuivant->indice) {
         printf("Ajout du mot\n");
-        ajouterMot(phraseSelecSuivant, mot, ordre);
+        ajouterMot(phraseSelecSuivant, mot, ordre, ligne);
         return 1;
     }
 
-    // Création d'un rayon
     T_Phrase *nouvellePhrase = creerPhrase(numPhrase);
     nouvellePhrase->suivant = phraseSelecSuivant;
     phraseSelec->suivant = nouvellePhrase;
     printf("La phrase est ajoutee avec succes !\n");
-    ajouterMot(nouvellePhrase, mot, ordre);
+    ajouterMot(nouvellePhrase, mot, ordre, ligne);
     return 1;
 }
 
@@ -457,14 +459,16 @@ int ajouterPhraseMot(T_listePhrases *index, char *mot, int numPhrase, int ordre)
 int parcoursABRSam(T_Noeud *noeud, T_listePhrases * liste) {
     if (noeud != NULL) {
         printf("Mot: %s, Occurrences: %d\n", noeud->mot, noeud->nbOccurences);
-        T_Position *posSelec = noeud->listePositions;
+        T_Position *posSelec = malloc(sizeof(T_Position));
+        posSelec = noeud->listePositions;
         while (posSelec){
             // Insertion dans une double liste chaînée -> trouver si la phrase existe et soit la créer, soit juste ajouter le mot
-            ajouterPhraseMot(liste, noeud->mot, posSelec->numeroPhrase, posSelec->ordre);
+            ajouterPhraseMot(liste, noeud->mot, posSelec->numeroPhrase, posSelec->ordre, posSelec->numeroLigne);
             posSelec = posSelec->suivant;
         }
         parcoursABRSam(noeud->filsDroit, liste);
         parcoursABRSam(noeud->filsGauche, liste);
+
     }
 }
 
@@ -504,25 +508,34 @@ void afficher_arbre(T_Noeud *racine, int prof){
 }
 
 
+
+
+
+
 // UTILITAIRE
-/*void afficherMagasin(T_listePhrases index) {
-    int nb_produit = 0;
-    // On teste s'il y a des rayons ajoutés ou si le magasin est vide
-    if (index.listePhrase == NULL){
-        printf("Rien dans le magasin");
-        return;
-    }
-    T_Phrase * iter = index.listePhrase;
-    T_Phrase *iter2 =NULL;
-    while(iter != NULL) {
-        iter2 = iter.listeMot;
-        while(iter2 != NULL){
-            nb_produit ++;
-            iter2 = iter2->suivant;
-        }
-        printf("Nom du rayon : %s || Nombre de produit : %d\n",iter->indice, nb_produit);
-        iter = iter->suivant;
-        nb_produit = 0;
+void afficherPos(T_Index *index) {
+    printf("\n\n");
+    T_Noeud *noeud = index->racine->filsGauche->filsDroit;
+    T_Position *pos = noeud->listePositions;
+    printf("%s, %d\n", noeud->mot, noeud->nbOccurences);
+    while (pos){
+        printf("%d, %d, %d\n", pos->ordre, pos->numeroLigne, pos->numeroPhrase);
+        pos = pos->suivant;
     }
 }
-*/
+
+
+void afficherTexte(T_listePhrases *index) {
+    T_Phrase *phraseSelec = index->listePhrase;
+    T_Mot *motSelec = NULL;
+
+    while (phraseSelec){
+        motSelec = phraseSelec->listeMot;
+        while (motSelec){
+            printf("%s ", motSelec->mot);
+            motSelec = motSelec->suivant;
+        }
+        printf("\n");
+        phraseSelec = phraseSelec->suivant;
+    }
+}

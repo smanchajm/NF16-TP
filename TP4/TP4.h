@@ -37,12 +37,14 @@ typedef struct Index T_Index;
 struct Mot {
     char *mot;
     struct Mot *suivant;
+    int ordre;
 };
 typedef struct Mot T_Mot;
 
 struct Phrase {
     struct Mot *listeMot;
     struct Phrase *suivant;
+    int indice;
     int nbMots;
 };
 typedef struct Phrase T_Phrase;
@@ -74,11 +76,15 @@ int indexerFichier(T_Index *index, char *filename);
 
 void construireTexte(T_Index index, char *filename);
 
-int parcoursABR(T_Noeud *noeud);
+int parcoursABR(T_Noeud *noeud, T_listePhrases * liste);
 
-void indexerListe(T_Index *index);
+T_listePhrases *indexerListe(T_Index *index);
 
+void afficher_arbre(T_Noeud *racine, int prof);
 
+int ajouterPhraseMot(T_listePhrases *index, char *mot, int numPhrase, int ordre);
+int ajouterMot(T_Phrase *phrase, char *mot, int ordre);
+//void afficherMagasin(T_listePhrases index);
 
 
 

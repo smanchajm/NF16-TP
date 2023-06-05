@@ -14,6 +14,9 @@ int main()
     indexerFichier(ABR, filename);
     printf("\n\n\n");
     indexerListe(ABR);
+
+    //afficher_arbre(ABR->racine, 0);
+    //afficherMagasin(liste);
     free(ABR);
 
 }

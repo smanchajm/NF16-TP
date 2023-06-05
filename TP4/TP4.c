@@ -285,6 +285,39 @@ int indexerFichier(T_Index *index, char *filename){
     return cmptMot;
 }
 
+void parcoursABR(T_Noeud* noeud, char lettre){
+    T_Noeud* currentpos = noeud;
+    if (noeud != NULL){
+        printf("%s \n",noeud->mot);
+        if (strncmp(noeud->mot,&lettre,1) == 0){
+            printf("%c \n", lettre);
+            printf("| -- %s \n", noeud->mot);
+            while(currentpos->listePositions != NULL){
+                printf("| -- l:%d, o:%d, p:%d \n", currentpos->listePositions->numeroLigne, currentpos->nbOccurences, currentpos->listePositions->numeroPhrase);
+                currentpos->listePositions = currentpos->listePositions->suivant;
+        }
+        }
+        parcoursABR(noeud->filsGauche, lettre);
+        parcoursABR(noeud->filsDroit, lettre);
+    }
+    else {
+        return;
+    }
+}
+
+
+void afficherIndex(T_Index index){
+    T_Noeud* current = index.racine;
+    if (index.racine == NULL){
+        printf("L'index est vide\n");
+        return;
+    }
+    char current_char = 65;
+    while (current_char < 91) {
+        parcoursABR(current, current_char);
+        current_char ++;
+    }
+}
 
 /* ********************************
  * Recherche d'un mot

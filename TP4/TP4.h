@@ -58,6 +58,14 @@ typedef struct listePhrases T_listePhrases;
 
 
 
+typedef struct LectureTexte {
+    char* mot;
+    struct LectureTexte* suivant;
+}T_LectureTexte;
+
+
+
+
 // Création et initialisation des structures
 T_Position *creerPosition(int numeroLigne, int ordre, int numeroPhrase);
 T_Noeud *creerNoeud(char *mot, int nbOccurences);
@@ -76,7 +84,7 @@ int indexerFichier(T_Index *index, char *filename);
 
 void construireTexte(T_Index index, char *filename);
 
-int parcoursABR(T_Noeud *noeud, T_listePhrases * liste);
+void parcoursABR(T_Noeud *noeud, char lettre);
 
 T_listePhrases *indexerListe(T_Index *index);
 

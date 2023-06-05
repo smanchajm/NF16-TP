@@ -19,7 +19,7 @@ int main()
     //afficherPos(ABR);
     //afficher_arbre(ABR->racine, 0);
     //afficherMagasin(liste);
-    afficherIndex(*ABR);
+    //afficherIndex(*ABR);
     rechercherMot(ABR,"arbre");
     free(ABR);
 

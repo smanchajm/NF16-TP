@@ -340,15 +340,17 @@ T_Noeud* rechercherMot(T_Index* index, char* mot) {
     T_Noeud *current = index->racine;
 
     while (current != NULL) {
+        printf("%s \n",current->mot);
+        printf("%d \n", strcasecmp(current->mot, mot));
         if (strcasecmp(current->mot, mot) == 0) {
             printf("Mot trouvé à la hauteur %d \n", hauteur_index);
             while(current->listePositions != NULL) {
-                printf("num ligne : %d | ordre : %d | num phrase : %d", current->listePositions->numeroLigne, current->listePositions->ordre, current->listePositions->numeroLigne);
+                printf("num ligne : %d | ordre : %d | num phrase : %d \n", current->listePositions->numeroLigne, current->listePositions->ordre, current->listePositions->numeroPhrase);
                 current->listePositions = current->listePositions->suivant;
             }
             return current;
 
-        } else if (strcasecmp(current->mot, mot) < 0) {
+        } else if (strcasecmp(current->mot, mot) > 0) {
             if (current->filsGauche != NULL) {
                 current = current->filsGauche;
             } else {

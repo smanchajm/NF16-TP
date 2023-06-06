@@ -85,7 +85,7 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
 
 int indexerFichier(T_Index *index, char *filename);
 
-void construireTexte(T_Index index, char *filename);
+void construireTexte(T_Index *index, char *filename);
 
 void afficherIndex(T_Index index);
 

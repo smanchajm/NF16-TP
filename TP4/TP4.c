@@ -368,6 +368,8 @@ T_Noeud* rechercherMot(T_Index* index, char* mot) {
     }
 }
 
+
+
 /* ********************************
  * Construction du texte
  ******************************** */
@@ -503,10 +505,49 @@ T_listePhrases *indexerListe(T_Index *index){
 
 
 
-void construireTexte(T_Index index, char *filename){
+void construireTexte(T_Index *index, char *filename){
     // 1. Indexer les nouvelles structures
     // 2. Creer un nouveau fichier et l'ouvrir
     // 3. Ecrire chaque mot dans un fichier
+    T_listePhrases *texte = indexerListe(index);
+    T_Phrase *phraseSelec = texte->listePhrase;
+    if (texte != NULL){
+        FILE *fichier = fopen(filename, "w");  // Ouverture du fichier en mode écriture
+        if (fichier == NULL) {
+            printf("Impossible d'ouvrir le fichier.\n");
+            return;
+        }
+        while (phraseSelec != NULL){
+            int flag = 1;
+            T_Mot *motSelec = phraseSelec->listeMot;
+            while (motSelec){
+                printf(motSelec->mot);
+
+                if (flag == 1){
+                    char *motMaj = motSelec->mot;
+                    motMaj[0] = toupper(motMaj[0]);
+                    flag = 0;
+                    fputs(motMaj, fichier);
+                    //fprintf(fichier, motMaj);
+                    fputs(" ", fichier);
+                } else if (motSelec->suivant == NULL){
+                    fputs(motSelec->mot, fichier);
+                    fputs(".", fichier);
+                    fputs(" ", fichier);
+                }
+                else{
+                    fputs(motSelec->mot, fichier);
+                    fputs(" ", fichier);
+                }
+                if (motSelec->suivant!= NULL && motSelec->ligne != motSelec->suivant->ligne){
+                    fputs("\n", fichier);
+                }
+                motSelec = motSelec->suivant;
+            }
+            phraseSelec = phraseSelec->suivant;
+        }
+        fclose(fichier);  // Fermeture du fichier
+    }
 
 
 }
@@ -524,6 +565,11 @@ void afficher_arbre(T_Noeud *racine, int prof){
 
 }
 
+
+
+/* ********************************
+ * Affichage des occurences d'un mot
+ ******************************** */
 
 void afficherOccurencesMot(T_Index *index, char *mot) {
     //T_Noeud* noeud = rechercherMot(index, mot);

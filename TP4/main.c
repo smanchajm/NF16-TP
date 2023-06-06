@@ -19,6 +19,7 @@ int main()
     //afficherMagasin(liste);
     //afficherIndex(*ABR);
     afficherPos(ABR);
+    construireTexte(ABR, "../TP4/test2.txt");
 
 
     //afficherTexte(index);

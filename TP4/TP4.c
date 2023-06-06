@@ -325,7 +325,7 @@ void afficherIndex(T_Index index){
  * Recherche d'un mot
  ******************************** */
 
-T_Noeud* rechercherMot(T_Index* index, char* mot) {
+/*T_Noeud* rechercherMot(T_Index* index, char* mot) {
     int hauteur_index = 0;
 
     if (index == NULL) {
@@ -366,6 +366,24 @@ T_Noeud* rechercherMot(T_Index* index, char* mot) {
         }
         hauteur_index++;
     }
+}*/
+T_Noeud *rechercherMot(T_Index *index, char *mot) {
+
+    T_Noeud* ptr = index->racine;
+    while (ptr != NULL) {
+        if (strcasecmp(ptr->mot, mot) == 0) {
+            //printf("\n Mot trouvé: %s", ptr->mot);
+            return ptr;
+        } else if (strcasecmp(ptr->mot, mot) < 0) {
+            //printf("\n Passage ptr fils droit");
+            ptr = ptr->filsDroit;
+        } else {
+            // printf("\n Passage ptr fils gauche");
+            ptr = ptr->filsGauche;
+        }
+    }
+    printf("\n Ce mot n'est pas présent");
+    return NULL;
 }
 
 
@@ -572,8 +590,9 @@ void afficher_arbre(T_Noeud *racine, int prof){
  ******************************** */
 
 void afficherOccurencesMot(T_Index *index, char *mot) {
-    //T_Noeud* noeud = rechercherMot(index, mot);
-    T_Noeud *noeud = index->racine->filsGauche;
+    T_Noeud* noeud = rechercherMot(index, mot);
+    //T_Noeud *noeud = index->racine->filsGauche;
+    printf("%s\n\n\n", noeud->listePositions);
     if (noeud == NULL) {
         printf("Le mot %s n'est pas dans l'index.\n", mot);
     }

@@ -367,6 +367,7 @@ void afficherIndex(T_Index index){
 T_Noeud *rechercherMot(T_Index *index, char *mot) {
 
     T_Noeud* ptr = index->racine;
+    printf("%s", index->racine->mot);
     while (ptr != NULL) {
         if (strcasecmp(ptr->mot, mot) == 0) {
             //printf("\n Mot trouvé: %s", ptr->mot);
@@ -582,7 +583,7 @@ void afficher_arbre(T_Noeud *racine, int prof){
 void afficherOccurencesMot(T_Index *index, char *mot) {
     T_Noeud* noeud = rechercherMot(index, mot);
     //T_Noeud *noeud = index->racine->filsGauche;
-    printf("%s\n\n\n", noeud->listePositions);
+    printf("%d\n\n\n", noeud->listePositions->ordre);
     if (noeud == NULL) {
         printf("Le mot %s n'est pas dans l'index.\n", mot);
     }

@@ -93,7 +93,7 @@ int parcoursABR(T_Noeud *noeud, T_listePhrases * liste);
 
 void parcours_affichage(T_Noeud* noeud, char lettre);
 
-T_Noeud* rechercherMot(T_Index* index, char* character);
+T_Noeud* rechercherMot(T_Index *index, char* character);
 int parcoursABRSam(T_Noeud *noeud, T_listePhrases * liste);
 
 T_listePhrases *indexerListe(T_Index *index);

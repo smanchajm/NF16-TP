@@ -1,3 +1,9 @@
-Cet arbre binaire de recherche est un arbre 
-binaire un peu particulier. Oui cet arbre 
-binaire est tres utile. 
+Lorem ipsum dolor sit amet consectetur adipiscing elit. Curabitur metus 
+mi euismod non purus vitae molestie facilisis nibh. Nulla vehicula feugiat nulla vel consequat 
+urna. Pellentesque eget lectus lectus. In in metus diam. Pellentesque sollicitudin rutrum vehicula. Pellentesque habitant morbi tristique 
+senectus et netus et malesuada fames ac turpis egestas. Nam dapibus tortor hendrerit ornare justo 
+placerat lacus. In vestibulum ipsum ac faucibus pulvinar dolor lectus rhoncus urna 
+ac elementum tortor justo in odio. Phasellus sagittis tristique justo id pulvinar. Morbi consectetur metus varius tempus vehicula ligula turpis sodales ligula id aliquet augue sem 
+ac urna. Duis ut interdum metus. Nam porttitor facilisis ligula in fermentum nunc 
+vulputate nec. Nullam nec leo pulvinar efficitur tellus vitae mollis massa. Nullam hendrerit justo 
+ac mi luctus semper. 

@@ -18,13 +18,14 @@ int main()
     //afficher_arbre(ABR->racine, 0);
     //afficherMagasin(liste);
     //afficherIndex(*ABR);
-    afficherPos(ABR);
-    construireTexte(ABR, "../TP4/test2.txt");
+    //afficherPos(ABR);
+    //construireTexte(ABR, "../TP4/test2.txt");
+    //rechercherMot(ABR,"arbre");
 
 
     //afficherTexte(index);
 
-    afficherOccurencesMot(ABR, "arbre");
+    afficherOccurencesMot(ABR, "un");
     free(ABR);
 
 }

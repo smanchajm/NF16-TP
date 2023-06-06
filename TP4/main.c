@@ -21,9 +21,9 @@ int main()
     afficherPos(ABR);
 
 
-    afficherTexte(index);
+    //afficherTexte(index);
 
-    //afficherOccurencesMot(ABR, "oui");
+    afficherOccurencesMot(ABR, "Cet");
     free(ABR);
 
 }

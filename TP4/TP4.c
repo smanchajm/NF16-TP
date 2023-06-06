@@ -526,55 +526,48 @@ void afficher_arbre(T_Noeud *racine, int prof){
 
 
 void afficherOccurencesMot(T_Index *index, char *mot) {
-    // on recupere l'adresse du mot et on initialise nos tableaux de position
-    T_Noeud *n = rechercherMot(index, mot);
-    if (n != NULL) {
-        int *tab_phrase = malloc(n->nbOccurences * sizeof(int));
-        int *tab_ordre = malloc(n->nbOccurences * sizeof(int));
-        int *tab_ligne = malloc(n->nbOccurences * sizeof(int));
-
-        // reuperation des positions
-        T_Position *tmp = n->listePositions;
-        for (int i = 0; i < n->nbOccurences; i++) {
-            tab_ordre[i] = tmp->ordre;
-            tab_phrase[i] = tmp->numeroPhrase;
-            tab_ligne[i] = tmp->numeroLigne;
-            tmp = tmp->suivant;
-        }
-
-        // indexation par ordre de phrase :
-        T_listePhrases *listePhrases = malloc(sizeof(T_listePhrases));
-        listePhrases = creerIndexPhrases();
-        listePhrases = indexerListe(index);
-
-        // affichage :
-        printf("\nMot = \"%s\"\n", n->mot);
-        printf("Occurences = %d\n", n->nbOccurences);
-        for (int i = 0; i < n->nbOccurences; i++) {
-            // positionnement dans l'index :
-            T_Phrase *phrase = listePhrases->listePhrase;
-            T_Mot *mot_liste = NULL;
-            for (int j = 1; j < tab_phrase[i]; j++) {
+    //T_Noeud* noeud = rechercherMot(index, mot);
+    T_Noeud *noeud = index->racine->filsGauche;
+    if (noeud == NULL) {
+        printf("Le mot %s n'est pas dans l'index.\n", mot);
+    }
+    else {
+        T_Position *pos = noeud->listePositions;
+        T_listePhrases *texte = indexerListe(index);
+        printf("\n\n");
+        T_Phrase *phrase = texte->listePhrase;
+        printf("\n\nMot = %s\n", noeud->mot);
+        printf("Occurences = %d\n", noeud->nbOccurences);
+        while (pos!= NULL){
+            while (phrase->indice != pos->numeroPhrase){
                 phrase = phrase->suivant;
             }
+            char phraseReconstitue[LONGLIGNE] = "";
+            T_Mot *motSelec = phrase->listeMot;
+            int flag = 1;
 
-            printf("| Ligne %d, mot %d :", tab_ligne[i], tab_ordre[i]);
-
-            // affichage de la phrase :
-            mot_liste = phrase->listeMot;
-            for (int k = 0; k < phrase->nbMots; k++) {
-                printf(" %s", mot_liste->mot);
-                mot_liste = mot_liste->suivant;
+            while (motSelec != NULL){
+                if (flag == 1){
+                    char *motMaj = motSelec->mot;
+                    motMaj[0] = toupper(motMaj[0]);
+                    flag = 0;
+                } else {
+                    strcat(phraseReconstitue, " ");
+                    strcat(phraseReconstitue, motSelec->mot);
+                    motSelec = motSelec->suivant;
+                    if (motSelec == NULL) {
+                        strcat(phraseReconstitue, ".");
+                    }
+                }
             }
-            printf(".\n");
+            printf("| Ligne %d, Mot %d : %s\n", pos->numeroLigne, pos->ordre, phraseReconstitue);
+
+
+            pos = pos->suivant;
+
         }
-        printf("\n");
-
-
-    } else {
-        printf("Le mot n'existe pas dans le texte");
     }
-    return;
+
 }
 
 
@@ -582,7 +575,7 @@ void afficherOccurencesMot(T_Index *index, char *mot) {
 // UTILITAIRE
 void afficherPos(T_Index *index) {
     printf("\n\n");
-    T_Noeud *noeud = index->racine->filsGauche;
+    T_Noeud *noeud = index->racine->filsDroit;
     T_Position *pos = noeud->listePositions;
     printf("%s, %d\n", noeud->mot, noeud->nbOccurences);
     while (pos){

@@ -328,7 +328,12 @@ T_Noeud* rechercherMot(T_Index* index, char* mot) {
         return NULL;
     }
     if (strcasecmp(index->racine->mot, mot) == 0) {
-        printf("Mot trouve a la hauteur %d", hauteur_index);
+        T_Position* tampon = index->racine;
+        //printf("Mot trouve a la hauteur %d", hauteur_index);
+        while(tampon != NULL) {
+            printf("num ligne : %d | ordre : %d | num phrase : %d \n", tampon->numeroLigne, tampon->ordre, tampon->numeroPhrase);
+            tampon = tampon->suivant;
+        }
         return index->racine;
     }
 
@@ -339,9 +344,11 @@ T_Noeud* rechercherMot(T_Index* index, char* mot) {
         printf("%d \n", strcasecmp(current->mot, mot));
         if (strcasecmp(current->mot, mot) == 0) {
             printf("Mot trouve e la hauteur %d \n", hauteur_index);
-            while(current->listePositions != NULL) {
-                printf("num ligne : %d | ordre : %d | num phrase : %d \n", current->listePositions->numeroLigne, current->listePositions->ordre, current->listePositions->numeroPhrase);
-                current->listePositions = current->listePositions->suivant;
+
+            T_Position* tempPositions = current->listePositions;
+            while(tempPositions != NULL) {
+                printf("num ligne : %d | ordre : %d | num phrase : %d \n", tempPositions->numeroLigne, tempPositions->ordre, tempPositions->numeroPhrase);
+                tempPositions = tempPositions->suivant;
             }
             return current;
 

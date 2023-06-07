@@ -279,19 +279,20 @@ int indexerFichier(T_Index *index, char *filename){
     return cmptMot;
 }
 
-void parcours_recherche(T_Noeud* noeud, char lettre){
+void parcours_recherche(T_Noeud* noeud, char lettre, char* tab, int i){
     T_Noeud* currentpos = noeud;
     if (noeud != NULL){
         if (strncmp(noeud->mot,&lettre,1) == 0){
-            printf("%c \n", lettre);
+            if (tab[i] != lettre) {printf("%c \n", lettre);}
             printf("|-- %s \n", noeud->mot);
             while(currentpos->listePositions != NULL){
                 printf("|--- (l:%d, o:%d, p:%d) \n", currentpos->listePositions->numeroLigne, currentpos->listePositions->ordre, currentpos->listePositions->numeroPhrase);
                 currentpos->listePositions = currentpos->listePositions->suivant;
             }
+            tab[i] = lettre;
         }
-        parcours_recherche(noeud->filsGauche, lettre);
-        parcours_recherche(noeud->filsDroit, lettre);
+        parcours_recherche(noeud->filsGauche, lettre, tab, i);
+        parcours_recherche(noeud->filsDroit, lettre, tab, i);
     }
     else {
         return;
@@ -301,13 +302,16 @@ void parcours_recherche(T_Noeud* noeud, char lettre){
 
 void afficherIndex(T_Index index){
     T_Noeud* current = index.racine;
+    char tab[30];
+    int i = 0;
     if (index.racine == NULL){
         printf("L'index est vide\n");
         return;
     }
     char current_char = 97;
     while (current_char < 123) {
-        parcours_recherche(current, current_char);
+        parcours_recherche(current, current_char,tab, i);
+        i ++;
         current_char ++;
     }
 }

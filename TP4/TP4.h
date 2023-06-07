@@ -106,6 +106,7 @@ void construireTexte(T_Index *index, char *filename);
 
 // Comparaison de deux mots
 int comparaison(int ligne1, int ordre1, int ligne2, int ordre2);
+void parcours_recherche(T_Noeud* noeud, char lettre, char* tab, int i);
 
 int parcoursABR(T_Noeud *noeud, T_listePhrases * liste);
 void parcours_affichage(T_Noeud* noeud, char lettre);

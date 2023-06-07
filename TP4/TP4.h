@@ -91,6 +91,7 @@ void afficherIndex(T_Index index);
 
 // Recherche d'un mot dans l'index
 T_Noeud* rechercherMot(T_Index *index, char* character);
+T_Noeud *rechercherMotOccurence(T_Index *index, char *mot);
 
 // Affichage de toutes les occurences d'un mot
 void afficherOccurencesMot(T_Index *index, char *mot);

@@ -316,7 +316,7 @@ void afficherIndex(T_Index index){
  * Recherche d'un mot
  ******************************** */
 
-/*T_Noeud* rechercherMot(T_Index* index, char* mot) {
+T_Noeud* rechercherMot(T_Index* index, char* mot) {
     int hauteur_index = 0;
 
     if (index == NULL) {
@@ -357,8 +357,9 @@ void afficherIndex(T_Index index){
         }
         hauteur_index++;
     }
-}*/
-T_Noeud *rechercherMot(T_Index *index, char *mot) {
+}
+
+T_Noeud *rechercherMotOccurence(T_Index *index, char *mot) {
 
     T_Noeud* ptr = index->racine;
     while (ptr != NULL) {
@@ -372,7 +373,6 @@ T_Noeud *rechercherMot(T_Index *index, char *mot) {
     }
     return NULL;
 }
-
 
 
 /* ********************************
@@ -557,7 +557,7 @@ void construireTexte(T_Index *index, char *filename){
  ******************************** */
 
 void afficherOccurencesMot(T_Index *index, char *mot) {
-    T_Noeud* noeud = rechercherMot(index, mot);
+    T_Noeud* noeud = rechercherMotOccurence(index, mot);
     if (noeud == NULL) {
         printf("\nLe mot %s n'est pas dans l'index.\n", mot);
     }

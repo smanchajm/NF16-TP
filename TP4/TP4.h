@@ -5,7 +5,7 @@
 #ifndef NF16_P23_2_TP4_H
 #define NF16_P23_2_TP4_H
 #define MAX 70 //Maximum de caractères pour un nom
-#define LONGLIGNE 100
+#define LONGLIGNE 300
 
 // Structures et types
 struct Position {

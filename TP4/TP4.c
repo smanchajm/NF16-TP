@@ -264,7 +264,7 @@ int indexerFichier(T_Index *index, char *filename){
             } else{ // C'est la fin d'un mot
                 if (strlen(mot) != 0){
                     // On ajoute le mot à l'ABR
-                    printf("\n%s\n", mot);
+                    //printf("\n%s\n", mot);
                     ajouterOccurence(index, mot, cmptLigne, cmptOrdre, cmptPhrase);
                     cmptMot++;
                 }
@@ -367,7 +367,7 @@ void afficherIndex(T_Index index){
 T_Noeud *rechercherMot(T_Index *index, char *mot) {
 
     T_Noeud* ptr = index->racine;
-    printf("%s", index->racine->mot);
+    //printf("%s", index->racine->mot);
     while (ptr != NULL) {
         if (strcasecmp(ptr->mot, mot) == 0) {
             //printf("\n Mot trouvé: %s", ptr->mot);
@@ -380,7 +380,6 @@ T_Noeud *rechercherMot(T_Index *index, char *mot) {
             ptr = ptr->filsGauche;
         }
     }
-    printf("\n Ce mot n'est pas présent");
     return NULL;
 }
 
@@ -425,7 +424,7 @@ int ajouterMot(T_Phrase *phrase, char *mot, int ordre, int ligne){
     }
 
     // Si le mot existe déjà, on retourne 0
-    if (motSelecSuivant != NULL && ordre == motSelecSuivant->ordre) {
+    if (motSelecSuivant != NULL && ordre == motSelecSuivant->ordre && ligne == motSelecSuivant->ligne) {
         printf("Impossible le mot existe deja\n");
         return 0;
     }
@@ -442,9 +441,11 @@ int ajouterMot(T_Phrase *phrase, char *mot, int ordre, int ligne){
 
 int ajouterPhraseMot(T_listePhrases *index, char *mot, int numPhrase, int ordre, int ligne) {
 
+
     // Insertion du nouveau rayon en tête de liste
     if (( index->listePhrase != NULL) && (numPhrase == index->listePhrase->indice)){
         ajouterMot(index->listePhrase, mot, ordre, ligne);
+        index->listePhrase->nbMots++;
         return 1;
     }
     if((index->listePhrase == NULL) || ( numPhrase < index->listePhrase->indice )){
@@ -454,6 +455,7 @@ int ajouterPhraseMot(T_listePhrases *index, char *mot, int numPhrase, int ordre,
         nouvPhrase->suivant = tmp;
         //printf("Insertion de la phrase en tete de liste.\n");
         ajouterMot(index->listePhrase, mot, ordre, ligne);
+        index->listePhrase->nbMots++;
         return 1;
     }
 
@@ -470,6 +472,7 @@ int ajouterPhraseMot(T_listePhrases *index, char *mot, int numPhrase, int ordre,
     if (phraseSelecSuivant != NULL && numPhrase == phraseSelecSuivant->indice) {
         //printf("Ajout du mot\n");
         ajouterMot(phraseSelecSuivant, mot, ordre, ligne);
+        phraseSelecSuivant->nbMots++;
         return 1;
     }
 
@@ -478,6 +481,7 @@ int ajouterPhraseMot(T_listePhrases *index, char *mot, int numPhrase, int ordre,
     phraseSelec->suivant = nouvellePhrase;
     //printf("La phrase est ajoutee avec succes !\n");
     ajouterMot(nouvellePhrase, mot, ordre, ligne);
+    nouvellePhrase->nbMots++;
     return 1;
 }
 
@@ -486,7 +490,7 @@ int ajouterPhraseMot(T_listePhrases *index, char *mot, int numPhrase, int ordre,
 
 int parcoursABRSam(T_Noeud *noeud, T_listePhrases * liste) {
     if (noeud != NULL) {
-        printf("Mot: %s, Occurrences: %d\n", noeud->mot, noeud->nbOccurences);
+        //printf("Mot: %s, Occurrences: %d\n", noeud->mot, noeud->nbOccurences);
         T_Position *posSelec = malloc(sizeof(T_Position));
         posSelec = noeud->listePositions;
         while (posSelec){
@@ -531,7 +535,7 @@ void construireTexte(T_Index *index, char *filename){
             int flag = 1;
             T_Mot *motSelec = phraseSelec->listeMot;
             while (motSelec){
-                printf(motSelec->mot);
+                //printf(motSelec->mot);
 
                 if (flag == 1){
                     char *motMaj = motSelec->mot;
@@ -561,18 +565,6 @@ void construireTexte(T_Index *index, char *filename){
 
 }
 
-void afficher_arbre(T_Noeud *racine, int prof){
-        int i;
-        for (i=0; i < prof; i++)
-        {
-            fputs("|___ ", stdout);
-        }
-
-        printf("[%s]\n", racine->mot);
-        if (racine->filsGauche) afficher_arbre(racine->filsGauche, prof + 1);
-        if (racine->filsDroit) afficher_arbre(racine->filsDroit, prof + 1);
-
-}
 
 
 
@@ -583,14 +575,13 @@ void afficher_arbre(T_Noeud *racine, int prof){
 void afficherOccurencesMot(T_Index *index, char *mot) {
     T_Noeud* noeud = rechercherMot(index, mot);
     //T_Noeud *noeud = index->racine->filsGauche;
-    printf("%d\n\n\n", noeud->listePositions->ordre);
+    //printf("%d\n\n\n", noeud->listePositions->ordre);
     if (noeud == NULL) {
-        printf("Le mot %s n'est pas dans l'index.\n", mot);
+        printf("\nLe mot %s n'est pas dans l'index.\n", mot);
     }
     else {
         T_Position *pos = noeud->listePositions;
         T_listePhrases *texte = indexerListe(index);
-        printf("\n\n");
         T_Phrase *phrase = texte->listePhrase;
         printf("\n\nMot = %s\n", noeud->mot);
         printf("Occurences = %d\n", noeud->nbOccurences);
@@ -606,15 +597,16 @@ void afficherOccurencesMot(T_Index *index, char *mot) {
                 if (flag == 1){
                     char *motMaj = motSelec->mot;
                     motMaj[0] = toupper(motMaj[0]);
+                    strcat(phraseReconstitue, motMaj);
                     flag = 0;
                 } else {
                     strcat(phraseReconstitue, " ");
                     strcat(phraseReconstitue, motSelec->mot);
-                    motSelec = motSelec->suivant;
-                    if (motSelec == NULL) {
+                    if (motSelec->suivant == NULL) {
                         strcat(phraseReconstitue, ".");
                     }
                 }
+                motSelec = motSelec->suivant;
             }
             printf("| Ligne %d, Mot %d : %s\n", pos->numeroLigne, pos->ordre, phraseReconstitue);
 
@@ -630,7 +622,7 @@ void afficherOccurencesMot(T_Index *index, char *mot) {
 
 // UTILITAIRE
 void afficherPos(T_Index *index) {
-    printf("\n\n");
+    //printf("\n\n");
     T_Noeud *noeud = index->racine->filsDroit;
     T_Position *pos = noeud->listePositions;
     printf("%s, %d\n", noeud->mot, noeud->nbOccurences);

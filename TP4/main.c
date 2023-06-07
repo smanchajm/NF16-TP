@@ -19,13 +19,13 @@ int main()
     //afficherMagasin(liste);
     //afficherIndex(*ABR);
     //afficherPos(ABR);
-    //construireTexte(ABR, "../TP4/test2.txt");
+    construireTexte(ABR, "../TP4/test2.txt");
     //rechercherMot(ABR,"arbre");
 
 
     //afficherTexte(index);
 
-    afficherOccurencesMot(ABR, "un");
+    afficherOccurencesMot(ABR, "dans");
     free(ABR);
 
 }

@@ -50,12 +50,14 @@ void menu(){
             }
 
             case '2' : {
+                if (ABR->racine == NULL){printf("Alerte index vide!"); break;}
                 printf("Nombre de mots distincts : %d\n Nombre de mots : %d\n", ABR->nbMotsDistincts, ABR->nbMotsTotal);
                 break;
 
             }
 
             case '3' : {
+                if (ABR->racine == NULL){printf("Alerte index vide!"); break;}
                 afficherIndex(*ABR);
                 break;
 

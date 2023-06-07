@@ -179,6 +179,8 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
         index->racine = creerNoeud(mot, 0);
         index->racine->listePositions = ajouterPosition(index->racine->listePositions, ligne, ordre, phrase);
         index->racine->nbOccurences ++;
+        index->nbMotsTotal++;
+        index->nbMotsDistincts++;
         return 1;
     }
 
@@ -188,6 +190,7 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
     while ((noeudSelec != NULL)){
         if(strcasecmp(noeudSelec->mot, mot) == 0){
             T_Position *listePos = ajouterPosition(noeudSelec->listePositions, ligne, ordre, phrase);
+            index->nbMotsTotal++;
             if(listePos == NULL){
                 printf("Impossible l'occurence de ce mot est deja renseignee.\n");
                 return 0;
@@ -208,10 +211,14 @@ int ajouterOccurence(T_Index *index, char *mot, int ligne, int ordre, int phrase
         noeudPere->filsGauche = creerNoeud(mot, 0);
         noeudPere->filsGauche->listePositions = ajouterPosition(noeudPere->filsGauche->listePositions, ligne, ordre, phrase);
         noeudPere->filsGauche->nbOccurences++;
+        index->nbMotsTotal++;
+        index->nbMotsDistincts++;
     } else{
         noeudPere->filsDroit = creerNoeud(mot, 0);
         noeudPere->filsDroit->listePositions = ajouterPosition(noeudPere->filsDroit->listePositions, ligne, ordre, phrase);
         noeudPere->filsDroit->nbOccurences++;
+        index->nbMotsTotal++;
+        index->nbMotsDistincts++;
     }
 
     return 1;
@@ -340,10 +347,10 @@ T_Noeud* rechercherMot(T_Index* index, char* mot) {
     T_Noeud *current = index->racine;
 
     while (current != NULL) {
-        printf("%s \n",current->mot);
-        printf("%d \n", strcasecmp(current->mot, mot));
+        //printf("%s \n",current->mot);
+        //printf("%d \n", strcasecmp(current->mot, mot));
         if (strcasecmp(current->mot, mot) == 0) {
-            printf("Mot trouve e la hauteur %d \n", hauteur_index);
+            //printf("Mot trouve a la hauteur %d \n", hauteur_index);
 
             T_Position* tempPositions = current->listePositions;
             while(tempPositions != NULL) {
@@ -550,6 +557,11 @@ void construireTexte(T_Index *index, char *filename){
                 }
                 if (motSelec->suivant!= NULL && motSelec->ligne != motSelec->suivant->ligne){
                     fputs("\n", fichier);
+                }
+                if (motSelec->suivant == NULL && phraseSelec->suivant){
+                    if (motSelec->ligne != phraseSelec->suivant->listeMot->ligne){
+                        fputs("\n", fichier);
+                    }
                 }
                 motSelec = motSelec->suivant;
             }

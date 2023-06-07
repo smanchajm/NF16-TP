@@ -285,9 +285,10 @@ void parcours_recherche(T_Noeud* noeud, char lettre, char* tab, int i){
         if (strncmp(noeud->mot,&lettre,1) == 0){
             if (tab[i] != lettre) {printf("%c \n", lettre);}
             printf("|-- %s \n", noeud->mot);
-            while(currentpos->listePositions != NULL){
-                printf("|--- (l:%d, o:%d, p:%d) \n", currentpos->listePositions->numeroLigne, currentpos->listePositions->ordre, currentpos->listePositions->numeroPhrase);
-                currentpos->listePositions = currentpos->listePositions->suivant;
+            T_Position * tempPositions = noeud->listePositions;
+            while (tempPositions != NULL){
+                printf("|--- (l:%d, o:%d, p:%d) \n", tempPositions->numeroLigne, tempPositions->ordre, tempPositions->numeroPhrase);
+                tempPositions = tempPositions->suivant;
             }
             tab[i] = lettre;
         }
@@ -602,5 +603,62 @@ void afficherOccurencesMot(T_Index *index, char *mot) {
         }
     }
 
+}
+
+
+
+/* ********************************
+ * Utilitaire
+ ******************************** */
+
+void viderABR(T_Noeud *noeud) {
+    if (noeud != NULL) {
+        viderABR(noeud->filsGauche);
+        viderABR(noeud->filsDroit);
+        free(noeud->mot);
+        free(noeud);
+    }
+}
+
+
+void viderIndex(T_Index *index) {
+    // Vider les listes
+    T_Noeud *noeud = index->racine;
+    while (noeud != NULL) {
+        T_Position *position = noeud->listePositions;
+        while (position != NULL) {
+            T_Position *suivant = position->suivant;
+            free(position);
+            position = suivant;
+        }
+        noeud->listePositions = NULL;
+        noeud = noeud->filsDroit;
+    }
+
+    // Vider les ABR
+    viderABR(index->racine);
+
+    // Réinitialiser l'index
+    index->racine = NULL;
+    index->nbMotsDistincts = 0;
+    index->nbMotsTotal = 0;
+}
+
+void viderListePhrases(T_listePhrases *listePhrases) {
+    T_Phrase *phrase = listePhrases->listePhrase;
+    while (phrase != NULL) {
+        T_Mot *mot = phrase->listeMot;
+        while (mot != NULL) {
+            T_Mot *suivant = mot->suivant;
+            free(mot->mot);
+            free(mot);
+            mot = suivant;
+        }
+        T_Phrase *suivante = phrase->suivant;
+        free(phrase);
+        phrase = suivante;
+    }
+    listePhrases->listePhrase = NULL;
+    listePhrases->nbLignes = 0;
 }
 

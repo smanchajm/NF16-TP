@@ -120,4 +120,9 @@ int ajouterMot(T_Phrase *phrase, char *mot, int ordre, int ligne);
 
 void menu();
 
+void viderABR(T_Noeud *noeud);
+void viderIndex(T_Index *index);
+
+void viderListePhrases(T_listePhrases *listePhrases);
+
 #endif //NF16_P23_2_TP4_H

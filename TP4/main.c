@@ -41,6 +41,9 @@ void menu(){
 
         switch (choix) {
             case '1' : {
+                if (ABR == NULL){
+                    viderIndex(ABR);
+                }
                 char *filename = "../TP4/test.txt";
                 indexerFichier(ABR, filename);
                 printf("\n\n\n");
@@ -76,14 +79,12 @@ void menu(){
 
             case '5' : {
 
-                if (ABR->racine == NULL){printf("Alerte index vide!"); break;}
+                if (ABR->racine == NULL || index == NULL){printf("Alerte index vide!"); break;}
                 char word[100];
                 printf("Quel mot souhaitez vous rechercher ? \n");
                 scanf("%s", word);
                 viderBuffer();
-                //afficherOccurencesMot(ABR, "superieure");
-
-                afficherOccurencesMot(ABR, word);
+                afficherOccurencesMot(ABR, word, index);
                 break;
 
             }
@@ -91,11 +92,11 @@ void menu(){
             case '6' : {
 
                 char* nouveau_texte = "../TP4/test2.txt";
-                if (ABR->racine == NULL){
+                if (ABR->racine == NULL || index == NULL){
                     printf("Erreur! Index vide, impossible de créer un texte \n");
                 }
                 else {
-                    construireTexte(ABR, nouveau_texte);
+                    construireTexte(ABR, nouveau_texte, index);
                 }
                 break;
             }

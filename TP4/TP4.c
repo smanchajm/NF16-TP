@@ -493,7 +493,7 @@ int ajouterPhraseMot(T_listePhrases *index, char *mot, int numPhrase, int ordre,
 
 
 
-int parcoursABRSam(T_Noeud *noeud, T_listePhrases * liste) {
+int parcoursABR(T_Noeud *noeud, T_listePhrases * liste) {
     if (noeud != NULL) {
         T_Position *posSelec = malloc(sizeof(T_Position));
         posSelec = noeud->listePositions;
@@ -502,8 +502,8 @@ int parcoursABRSam(T_Noeud *noeud, T_listePhrases * liste) {
             ajouterPhraseMot(liste, noeud->mot, posSelec->numeroPhrase, posSelec->ordre, posSelec->numeroLigne);
             posSelec = posSelec->suivant;
         }
-        parcoursABRSam(noeud->filsDroit, liste);
-        parcoursABRSam(noeud->filsGauche, liste);
+        parcoursABR(noeud->filsDroit, liste);
+        parcoursABR(noeud->filsGauche, liste);
 
     }
 }
@@ -517,17 +517,14 @@ T_listePhrases *indexerListe(T_Index *index){
 
     }
     T_listePhrases *liste = creerIndexPhrases();
-    parcoursABRSam(index->racine, liste);
+    parcoursABR(index->racine, liste);
     return liste;
 }
 
 
 
-void construireTexte(T_Index *index, char *filename){
-    // 1. Indexer les nouvelles structures
-    // 2. Creer un nouveau fichier et l'ouvrir
-    // 3. Ecrire chaque mot dans un fichier
-    T_listePhrases *texte = indexerListe(index);
+void construireTexte(T_Index *index, char *filename, T_listePhrases *texte){
+    //T_listePhrases *texte = indexerListe(index);
     T_Phrase *phraseSelec = texte->listePhrase;
     if (texte != NULL){
         FILE *fichier = fopen(filename, "w");  // Ouverture du fichier en mode écriture
@@ -579,15 +576,14 @@ void construireTexte(T_Index *index, char *filename){
 /* ********************************
  * Affichage des occurences d'un mot
  ******************************** */
-
-void afficherOccurencesMot(T_Index *index, char *mot) {
+void afficherOccurencesMot(T_Index *index, char *mot, T_listePhrases *texte) {
     T_Noeud* noeud = rechercherMotOccurence(index, mot);
     if (noeud == NULL) {
         printf("\nLe mot %s n'est pas dans l'index.\n", mot);
     }
     else {
         T_Position *pos = noeud->listePositions;
-        T_listePhrases *texte = indexerListe(index);
+        //T_listePhrases *texte = indexerListe(index);
         T_Phrase *phrase = texte->listePhrase;
         printf("\n\nMot = %s\n", noeud->mot);
         printf("Occurences = %d\n", noeud->nbOccurences);

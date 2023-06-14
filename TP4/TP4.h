@@ -94,10 +94,12 @@ T_Noeud* rechercherMot(T_Index *index, char* character);
 T_Noeud *rechercherMotOccurence(T_Index *index, char *mot);
 
 // Affichage de toutes les occurences d'un mot
-void afficherOccurencesMot(T_Index *index, char *mot);
+//void afficherOccurencesMot(T_Index *index, char *mot);
+void afficherOccurencesMot(T_Index *index, char *mot, T_listePhrases *texte);
 
 // Construction du texte à partir d'un index de type ABR
-void construireTexte(T_Index *index, char *filename);
+//void construireTexte(T_Index *index, char *filename);
+void construireTexte(T_Index *index, char *filename, T_listePhrases *texte);
 
 
 /* ********************************
@@ -108,14 +110,13 @@ void construireTexte(T_Index *index, char *filename);
 int comparaison(int ligne1, int ordre1, int ligne2, int ordre2);
 void parcours_recherche(T_Noeud* noeud, char lettre, char* tab, int i);
 
-int parcoursABR(T_Noeud *noeud, T_listePhrases * liste);
 void parcours_affichage(T_Noeud* noeud, char lettre);
 
 // Fonctions d'indexations de la liste chainee
-T_listePhrases *indexerListe(T_Index *index);
-int parcoursABRSam(T_Noeud *noeud, T_listePhrases * liste);
-int ajouterPhraseMot(T_listePhrases *index, char *mot, int numPhrase, int ordre, int ligne);
-int ajouterMot(T_Phrase *phrase, char *mot, int ordre, int ligne);
+T_listePhrases *indexerListe(T_Index *index); // DONE
+int parcoursABR(T_Noeud *noeud, T_listePhrases * liste); // DONE
+int ajouterPhraseMot(T_listePhrases *index, char *mot, int numPhrase, int ordre, int ligne); // DONE
+int ajouterMot(T_Phrase *phrase, char *mot, int ordre, int ligne); // DONE
 
 
 void menu();
